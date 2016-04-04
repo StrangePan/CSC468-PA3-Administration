@@ -1,29 +1,16 @@
-class MCSUser implements User
+require_once('user.php');
+
+class MCSUser extends User
 {
-    private static $instance;
     private $username;
     private $displayName;
 
     //Constructor that takes necessary user data.
-    public MCSUser($user, $display)
+    public __construct($user, $display)
     {
-        $this->vars[$username] = $user;
-        $this->vars[$displayName] = $display;
-        MCSUser::$instance = $this;
-    }
-
-    //This method will return null if no user has been created,
-    //and will return the current user object otherwise.
-    public static function getCurrentUser()
-    {
-        return MCSUser::$instance;
-    }
-    
-    //Always returns a boolean value representing whether a user has
-    //been created or not.
-    public function isAuthenticated()
-    {
-        return (MCSUser::$instance == NULL);
+        parent::__construct();
+        $this->username = $user;
+        $this->displayName = $display;
     }
 
     //Returns the display name for the current user. Return is always a string
