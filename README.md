@@ -1,4 +1,4 @@
-# Adminstration
+# Adminstration and Organization
 
 **School:** SDSM&T  
 **Course:** CSC 468: GUI Programming  
@@ -7,6 +7,39 @@
 **Assignment:** Programming Assignment 3  
 **Team:** Website Organization and Administration  
 
+## Installation and Configuration
+
+To use this code during development, you will need to do some initial setup.
+
+1. Enable Apache URL rewriting module
+2. Enable .htaccess files
+
+### 1. Enable Apache URL rewriting module
+
+Apache must be configured to allow URL rewriting in order for this code to work
+correctly. To enable URl rewriting, follow the below steps:
+
+1. Open your Apache configuration file in a plain text editor. (Google it if you
+don't know where it is.)
+2. Find the line containing the text "LoadModule rewrite_module".
+3. If the line has a "`#`" at the beginning, remove the "`#`" to uncomment the
+line.
+4. Save the file and restart Apache.
+
+### 2. Enable .htaccess Files
+
+Apache must be configured to allow the contents of .htaccess files to override
+the default Apache configuration. This is necessary for our code to execute
+properly.
+
+1. Open your Apache configuration file in a plain text editor. (Google it if you
+don't know where it is.)
+2. Find the line containing the text "AllowOverride None". If this line does not
+exist, then .htaccess files may already be enabled. If this line is found, then
+it should exist between opening and closing "`&lt;Directory&gt;`" tags.
+3. Change the line to say "AllowOverride All"
+4. Save the file and restart Apache.
+
 ## Development Guidelines and Requirements
 
 The goal of this project is to build a website framework upon which the other
@@ -14,7 +47,17 @@ teams in this assignment can develop their parts of this project. This document
 contains guidelines and specifications when generating HTML content for pages
 and for organizing your page files.
 
-### 1. All Page Files And Content Placed In Your Team's Assigned Subdirectory In `pages`
+1. All page files and content placed in that page's assigned subdirectory
+2. Only use relative paths
+3. Custom CSS and JavaScript is OK
+4. Avoid style attributes and tags
+5. No header or footer sections
+6. Use standard HTML structure for navigation
+7. Do not use tables for layouts
+8. Avoid size attributes
+9. Name files using common convention
+
+### 1. All Page Files and Content Placed in That Page's Assigned Subdirectory
 
 Each distinct page for the site will have its own unique directory under the
 `pages` directory. All files relevant for the page should be included in that
@@ -39,7 +82,7 @@ the site far easier.
     <a href="http://dev.mcs.sdsmt.edu/~1234567/pages/submit/index.php">Submit</a>
     <link rel="stylesheet" type="text/css" href="/~1234567/pages/my-page/css/styles.css" />
 
-### 3. Custom CSS and JavaScripts is OK
+### 3. Custom CSS and JavaScript is Okay
 
 Any custom CSS or JavaScript files can be placed in the same directory as the
 page in which it is used and referenced as normal in the HTML of the page. There
@@ -92,15 +135,15 @@ separate CSS file and apply them to elements using CSS classes.
       box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.5);
     }
 
-### 5. No Header/Footer
+### 5. No Header or Footer Sections
 
 When displaying a page, please avoid adding any page headers or footers. Such
 site-wide navigation elements will be included by a standard site template and
 are thus redundant.
 
-### 6. Navigation
+### 6. Use Standard HTML Structure for Navigation
 
-If you need to include navigation between multiple pages in your secstion of the
+If you need to include navigation between multiple pages in your section of the
 site, please structure the HTML of your navigation menu as follows:
 
     <nav class="section-nav">
@@ -117,7 +160,7 @@ very top of your HTML content.
 If you would like this menu to navigate to different sections on the same page,
 use the class `page-nav` instead of `section-nav`.
 
-### 7. Avoid Using Tables
+### 7. Do Not Use Tables for Layouts
 
 Please avoid using `<table>...</table>` tags for laying out your page. Use
 `<div>` elements for grouping elements in a related section and `<ul>` tags for
