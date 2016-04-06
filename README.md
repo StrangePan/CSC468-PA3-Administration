@@ -55,10 +55,11 @@ this repository. With this API, you will be able to:
 
 1. [Check if a user is logged in](#ch2s1)
 2. [Get the currently logged in user](#ch2s2)
-3. [Check if a user has certain permissions](#ch2s3)
-4. [Declare custom permissions](#ch2s4)
+3. [Get information on the current user](#ch2s3)
+3. [Check if a user has certain permissions](#ch2s4)
+4. [Declare custom permissions](#ch2s5)
 
-Explainations on these subjects will be followed by an [example](#ch2s5)
+Explainations on these subjects will be followed by an [example](#ch2s6)
 
 Below is an outline of the PHP classes you will be using to perform the above
 functions. The functionality of these classes will be developed over the course
@@ -89,26 +90,52 @@ function will return the `User` object of the currently logged in user, or it
 will return `null` if no user is logged in. An example of this is provided
 below.
 
-### <a name="ch2s3">3. Check if a User has Certain Permissions</a>
+### <a name="ch2s3">3. Get Information on the Current User</a>
+
+After checking if a user is logged in to the site and getting the current `User`
+object, you can get their username (e.g. student ID for students, faculty
+username for faculty) by calling `getUsername()` on the object. You can also get
+their display name (e.g. real name) by calling `getDisplayName()`. An example of
+these is provided below.
+
+### <a name="ch2s4">3. Check if a User has Certain Permissions</a>
 
 Permissions will be represented using strings. Your own team can design what
 permissions your pages will need to use, then you can check if a user if has
 a permission by calling the `hasPermission(string $permission)` function. An
 example of this is provided below.
 
-### <a name="ch2s4">4. Declare Custom Permissions</a>
+### <a name="ch2s5">4. Declare Custom Permissions</a>
 
 Before checking if a user has a certain permission, you will need to declare a
 permission at the top of a file. This can be done by calling the
 `declarePermission(string $permission)` static function. An example of this is
 provided below.
 
-### <a name="ch2s5">Example</a>
+The permission string can be whatever your team decides; it is entirely up to
+you. They can be as specific or vague as you want, but please keep in mind the
+following tips:
+
+1. Use a simple naming convention
+2. Make it clear what they do
+3. Avoid "subtractive" permissions (*permissions should **give** access, not
+take it away*)
+4. Generate permissions strings for each subpage if necessary, i.e. permissions
+for a specific student organization, etc.
+
+### <a name="ch2s6>Example</a>
 
     <?php
     // Declare any permissions to be used at the top. These permission strings
     // can be built dynamically based on the page you're on and can have
     // as much granularity as you see fit.
+    
+    // permissions that apply to all organizations
+    User::declarePermission('student-org.*.edit-details');
+    User::declarePermission('student-org.*.edit-member-list');
+    User::declarePermission('student-org.*.edit-officer-list');
+    
+    // permissions that apply to specific organization, can be auto-generated
     User::declarePermission('student-org.game-dev.edit-details');
     User::declarePermission('student-org.game-dev.edit-member-list');
     User::declarePermission('student-org.game-dev.edit-officer-list');
@@ -119,11 +146,15 @@ provided below.
         // User is logged in, get current user
         $user = User::getCurrentUser();
         
+        echo '<p>Hello, '.$user->getDisplayName().'</p>';
+        echo '<p><a href="../profile/'.$user->getUsername().'">View profile</a></p>';
+        
         echo '<form action="update-group.php" method="post">';
         echo '<input type="hidden" name="org-id" value="game-dev" />';
         
         // Display form fields based on user permissions
         if ($user->hasPermission('student-org.game-dev.edit-details')
+            || $user->hasPermission('student-org.*.edit-details'))
         {
             // Insert whatever logic necessary here
             // ...
@@ -131,6 +162,7 @@ provided below.
         }
         
         if ($user->hasPermission('student-org.game-dev.edit-member-list')
+            || $user->hasPermission('student-org.*.edit-member-list'))
         {
             // Insert whatever logic necessary here
             // ...
@@ -138,6 +170,7 @@ provided below.
         }
         
         if ($user->hasPermission('student-org.game-dev.edit-officer-list')
+            || $user->hasPermission('student-org.*.edit-officer-list'))
         {
             // Insert whatever logic necessary here
             // ...
