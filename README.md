@@ -53,13 +53,15 @@ in users and getting their permissions. We are providing this API as a PHP
 abstract class that will be accessible from all pages accessed using the code in
 this repository. With this API, you will be able to:
 
-1. [Check if a user is logged in](#ch2s1)
-2. [Get the currently logged in user](#ch2s2)
-3. [Get information on the current user](#ch2s3)
-3. [Check if a user has certain permissions](#ch2s4)
-4. [Declare custom permissions](#ch2s5)
+1. [Log a user in](#ch2s1)
+2. [Log a user out](#ch2s2)
+3. [Check if a user is already logged in](#ch2s3)
+4. [Get the currently logged in user](#ch2s4)
+5. [Get information on the current user](#ch2s5)
+6. [Check if a user has certain permissions](#ch2s6)
+7. [Declare custom permissions](#ch2s7)
 
-Explainations on these subjects will be followed by an [example](#ch2s6)
+Explainations on most of these subjects will be followed by an [example](#ch2s8)
 
 Below is an outline of the PHP classes you will be using to perform the above
 functions. The functionality of these classes will be developed over the course
@@ -67,22 +69,38 @@ of this project and will be uploaded to this repository.
 
     abstract class User
     {
+        static boolean authenticate(string $username, string $password);
         static boolean isAuthenticated();
         static User    getCurrentUser();
         static void    declarePermission(string $permission);
         string         getUsername();
         string         getDisplayName();
         boolean        hasPermission(string $permission);
+        void           logOut();
     }
 
-### <a name="ch2s1">1. Check if a User is Logged In</a>
+### <a name="ch2s1">1. Log a User In</a>
+
+To log a new user in, simply call the
+`authenticate(string $username, string $password)` static function, which will
+return `true` if the provided username and password strings successfully
+authenticated or `false` if it failed. If authentication was successful, calling
+`getCurrentUser()` will return the newly logged-in `User` object.
+
+### <a name="ch2s2">2. Log a user Out</a>
+
+After checking if a user is logged in to the site and getting the current `User`
+object, you can log the user out by calling the `logOut()` function. Calls to
+this function should always work.
+
+### <a name="ch2s2">1. Check if a User is Already Logged In</a>
 
 To check if a user is currently logged in to the site, simply call the
 `isAuthenticated()` static function, which will return `true` if a user is
 logged in or `false` if no user is logged in. An example of this is provided
 below.
 
-### <a name="ch2s2">2. Get the Currently Logged in User</a>
+### <a name="ch2s3">2. Get the Currently Logged in User</a>
 
 After checking if a user is logged in to the site, you can get the `User` object
 representing that user by calling the `getCurrentUser()` static function. This
@@ -90,7 +108,7 @@ function will return the `User` object of the currently logged in user, or it
 will return `null` if no user is logged in. An example of this is provided
 below.
 
-### <a name="ch2s3">3. Get Information on the Current User</a>
+### <a name="ch2s4">3. Get Information on the Current User</a>
 
 After checking if a user is logged in to the site and getting the current `User`
 object, you can get their username (e.g. student ID for students, faculty
@@ -98,14 +116,14 @@ username for faculty) by calling `getUsername()` on the object. You can also get
 their display name (e.g. real name) by calling `getDisplayName()`. An example of
 these is provided below.
 
-### <a name="ch2s4">3. Check if a User has Certain Permissions</a>
+### <a name="ch2s5">3. Check if a User has Certain Permissions</a>
 
 Permissions will be represented using strings. Your own team can design what
 permissions your pages will need to use, then you can check if a user if has
 a permission by calling the `hasPermission(string $permission)` function. An
 example of this is provided below.
 
-### <a name="ch2s5">4. Declare Custom Permissions</a>
+### <a name="ch2s6">4. Declare Custom Permissions</a>
 
 Before checking if a user has a certain permission, you will need to declare a
 permission at the top of a file. This can be done by calling the
@@ -123,7 +141,7 @@ take it away*)
 4. Generate permissions strings for each subpage if necessary, i.e. permissions
 for a specific student organization, etc.
 
-### <a name="ch2s6>Example</a>
+### <a name="ch2s7">Example</a>
 
     <?php
     // Declare any permissions to be used at the top. These permission strings
