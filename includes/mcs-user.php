@@ -43,4 +43,9 @@ class MCSUser extends User
 	{
 		return new self($username, 'TEST USER');
 	}
+	
+	public static function declarePermission($permission)
+	{
+		// To be implemented
+	}
 }

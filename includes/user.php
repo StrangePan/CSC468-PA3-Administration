@@ -146,7 +146,7 @@ abstract class User
 	{
 		if (isset($_SESSION[self::SESSION_FIELD]) && $_SESSION[self::SESSION_FIELD] === $this)
 		{
-			unset($_SESSION[self::SESSEION_FEILD]);
+			unset($_SESSION[self::SESSION_FIELD]);
 		}
 	}
 	
