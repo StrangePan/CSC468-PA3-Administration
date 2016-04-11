@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Test home page</title>
+		<title>User Test</title>
 	</head>
 	<body>
 <?php
@@ -10,11 +10,11 @@
 		
 		_echo ('User::isAuthenticated()', User::isAuthenticated());
 		_echo ('User::getCurrentUser()', User::getCurrentUser());
-		_echo ('User::authenticate()', User::authenticate('1234567', ''));
+		_echo ('User::authenticate(\'1234567\', \'\')', User::authenticate('1234567', ''));
 		_echo ('User::isAuthenticated()', User::isAuthenticated());
 		
 		$user = User::getCurrentUser();
-		_echo ('User::getCurrentUser()', $user);
+		_echo ('$user = User::getCurrentUser()', $user);
 		_echo ('$user->getUsername()', $user->getUsername());
 		_echo ('$user->getDisplayName()', $user->getDisplayName());
 		_echo ('$user->hasPermission(\''.$perm.'\')', $user->hasPermission($perm));
@@ -29,6 +29,7 @@
 				display: block;
 				width: 50%;
 				float: left;
+				white-space: pre;
 			}
 		</style>
 	</body>
@@ -37,7 +38,9 @@
 <?php
 function _echo($string, $val)
 {
-	echo '<p>'.$string.'</p>';
-	echo '<p>'; var_dump($val); echo '</p>';
-	echo '<hr/>';
+	echo "		<p>$string</p>\n";
+	echo "		<p>";
+	var_dump($val);
+	echo "</p>\n";
+	echo "		<hr/>\n";
 }
