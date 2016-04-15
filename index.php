@@ -1,5 +1,6 @@
 <?php
 require_once 'includes/mcs-user.php';
+include 'includes/template.php';
 User::setSubclass('MCSUser');
 
 session_start();
