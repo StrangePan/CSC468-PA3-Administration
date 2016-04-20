@@ -42,6 +42,10 @@ function extractHeadAndTitle($page)
 
             $headContents = str_replace($matches[2], '', $headContents);
         }
+        else
+        {
+            $pageTitle = false;
+        }
     }
 }
 
@@ -61,6 +65,44 @@ function extractBody($page)
     {
         $bodyContents = trim($matches[1], "\r\n");
     }
+}
+
+
+
+function headTitle()
+{
+    global $pageTitle;
+    return $pageTitle;
+}
+
+function headContents()
+{
+    global $headContents;
+    return $headContents;
+}
+
+function pageContents()
+{
+    global $bodyContents;
+    return $bodyContents;
+}
+
+function mainNavigation()
+{
+    // TODO
+    return "";
+}
+
+function footerNavigation()
+{
+    // TODO
+    return "";
+}
+
+function templateUrl()
+{
+    global $CONFIG;
+    return '/templates/'.$CONFIG[CONFIG_TEMPLATE_KEY];
 }
 
 ?>

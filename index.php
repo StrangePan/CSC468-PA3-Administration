@@ -1,6 +1,8 @@
 <?php
+require_once 'includes/config.php';
 require_once 'includes/mcs-user.php';
-include 'includes/template.php';
+require_once 'includes/template.php';
+
 User::setSubclass('MCSUser');
 
 session_start();
@@ -11,19 +13,34 @@ $redirections = array(
 
 function processFilePath($filePath)
 {
+  global $CONFIG;
+  
 	//Get extension
 	$extension = explode ('.', $filePath);
 	$extension = $extension[count($extension) - 1];
 
-	if ($extension == "php")
+	if ($extension == "php" || $extension == "html" || $extension == "htm")
 	{
-		// Execute PHP
-		include $filePath;
-	}
-	else if ($extension == "html" or $extension == "htm")
-	{
-		// Print out the HTML contents
-		echo file_get_contents($filePath);
+	  $pageContents = '';
+	  
+	  if ($extension == "php")
+	  {
+		  // Execute PHP
+		  ob_start();                     // capture anything sent to the output buffer
+		  include $filePath;
+		  $pageContents = ob_get_clean(); // end output buffering
+		}
+	  else if ($extension == "html" or $extension == "htm")
+	  {
+		  // Print out the HTML contents
+		  $pageContents = file_get_contents($filePath);
+		}
+		
+		// Now that we have page contents, time to extract key HTML elements
+		extractContents($pageContents);
+		
+		// Finally, execute the templating script
+		include 'templates/'.$CONFIG[CONFIG_TEMPLATE_KEY].'/index.php';
 	}
 	else
 	{
