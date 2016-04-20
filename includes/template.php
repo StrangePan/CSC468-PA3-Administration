@@ -39,9 +39,8 @@ function extractHeadAndTitle($page)
         if(isset($matches[3]))
         {
             $pageTitle = trim($matches[3]);
-            $titlePattern = "#$matches[2]#";
 
-            $headContents = preg_replace($titlePattern, '', $headContents);
+            $headContents = str_replace($matches[2], '', $headContents);
         }
     }
 }
