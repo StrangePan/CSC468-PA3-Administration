@@ -44,8 +44,17 @@ function processFilePath($filePath)
 	}
 	else
 	{
+	  if ($extension == "css")
+	  {
+	    $contentType = "text/css;charset=UTF-8";
+	  }
+	  else
+	  {
+	    $contentType = mime_content_type($filePath);
+    }
+	  
 		//Serve the file
-		header('Content-Type: ' . mime_content_type($filePath));
+		header('Content-Type: ' . $contentType);
 
 		//Check these
 		header("Expires: Mon, 1 Jan 2099 05:00:00 GMT");

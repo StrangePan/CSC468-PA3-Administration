@@ -17,11 +17,15 @@ footer {
   display: block;
   margin: 0;
   padding: 0;
+  
+  border-top: 1px solid black;
 }
 
 
 img.logo {
-  height: 10em;
+  float: left;
+  height: 8em;
+  margin-right: 3em;
 }
 
 
