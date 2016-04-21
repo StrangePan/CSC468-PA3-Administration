@@ -16,35 +16,45 @@
   <body>
 
     <!-- Main page header -->
-    <header>
+    <div class="header-wrapper">
+      <header>
 
-      <!-- School logo -->
-      <img src="<?php echo templateUrl(); ?>/images/sdsmt-logo.png" class="logo" alt="South Dakota School of Mines and Technology" />
-      
-      <!-- Website title -->
-      <h1>Math and Computer Science Department</h1>
-
-      <!-- Website navigation menu -->
+        <!-- School logo -->
+        <img src="<?php echo templateUrl(); ?>/images/sdsmt-logo.png" class="logo" alt="South Dakota School of Mines and Technology" />
+        
+        <!-- Website title -->
+        <h1>Math and Computer Science Department</h1>
+        <h2>South Dakota School of Mines and Technology</h2>
+      </header>
+    </div>
+    
+    <!-- Website navigation menu -->
+    <nav class="main-nav">
       <?php echo mainNavigation(); ?>
-    </header>
+    </nav>
 
     <!-- Main page content -->
-    <article class="contents">
+    <div class="content-wrapper">
+      <article class="contents">
 
-      <!-- Custom page contents -->
-      <?php echo pageContents(); ?>
+        <!-- Custom page contents -->
+        <?php echo pageContents(); ?>
 
-    </article>
+      </article>
+    </div>
 
     <!-- Main page footer -->
-    <footer>
+    <div class="footer-wrapper">
+      <footer>
 
-      <!-- Website footer navigation menu -->
-      <?php echo footerNavigation(); ?>
+        <!-- Website footer navigation menu -->
+        <nav class="footer-nav">
+          <?php echo footerNavigation(); ?>
+        </nav>
 
-      <!-- Website copyright notice -->
-      <p class="copyright">Copyright &copy; 2016 South Dakota School of Mines and Technology.</p>
-    </footer>
-
+        <!-- Website copyright notice -->
+        <p class="copyright">Copyright &copy; 2016 South Dakota School of Mines and Technology.</p>
+      </footer>
+    </div>
   </body>
 </html>
