@@ -8,12 +8,12 @@
 			<href>/</href>
 		</item>
 		<item>
-			<label>Page1</label>
-			<href>/</href>
+			<label>Login</label>
+			<href>/pages/login</href>
 		</item>
 		<item>
-			<label>Page2</label>
-			<href>/</href>
+			<label>Test</label>
+			<href>/pages/test</href>
 		</item>
 	</mainNav>
 </config>

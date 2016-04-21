@@ -25,6 +25,31 @@
         <!-- Website title -->
         <h1>Math and Computer Science Department</h1>
         <h2>South Dakota School of Mines and Technology</h2>
+        
+        <!-- User sign in form -->
+<?php if (!User::isAuthenticated()) : ?>
+        <form class="login" method="post" action="">
+          <label>
+            Username
+            <input type="text" name="username" placeholder="username" />
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" placeholder="password" />
+          </label>
+          <button type="submit">
+            Sign In
+          </button>
+        </form>
+<?php else : ?>
+        <form class="logout" method="post" action="">
+          <span>Welcome, <?php echo User::getCurrentUser()->getDisplayName(); ?>!</span>
+          <input type="hidden" name="logout" />
+          <button type="submit">
+            Log Out
+          </button>
+        </form>
+<?php endif; ?>
       </header>
     </div>
     
