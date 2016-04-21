@@ -102,7 +102,7 @@ header form.login button {
 .main-nav {
   display: block;
   padding: 0;
-  background-color: #011c4f; /* sdsmt blue */
+  background-color: #011C4F; /* sdsmt blue */
   border: 2px solid #c1a868; /* sdsmt gold */
   border-left-width: 0;
   border-right-width: 0;
@@ -170,10 +170,13 @@ header form.login button {
   margin: 0;
   padding: 0;
   
-  border: 3px dashed #c1a868;
+  border: 2px solid #C1A868;
   border-bottom-width: 0;
   border-right-width: 0;
   border-left-width: 0;
+  
+  background-color: #011C4F;
+  color: white;
 }
 
 footer {
