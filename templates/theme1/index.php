@@ -6,6 +6,7 @@
     
     <!-- Template stylesheets -->
     <link rel="stylesheet" type="text/css" href="<?php echo templateUrl(); ?>/css/styles.css" />
+    <link rel="icon" type="image/x-icon" href="<?php echo templateUrl(); ?>/images/favicon.ico" />
     
     <!-- Template scripts -->
     
