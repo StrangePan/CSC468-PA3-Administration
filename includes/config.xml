@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<template>theme1</template>
+	
+	<mainNav>
+		<item>
+			<label>Home</label>
+			<href>/</href>
+		</item>
+		<item>
+			<label>Login</label>
+			<href>/pages/login</href>
+		</item>
+		<item>
+			<label>Test</label>
+			<href>/pages/test</href>
+		</item>
+	</mainNav>
 </config>

@@ -7,6 +7,8 @@ User::setSubclass('MCSUser');
 
 session_start();
 
+require_once 'includes/login.php';
+
 $redirections = array(
 	'./index.php' => './pages/home/index.php'
 );
