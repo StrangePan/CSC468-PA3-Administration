@@ -2,8 +2,12 @@
 require_once 'includes/config.php';
 require_once 'includes/mcs-user.php';
 require_once 'includes/template.php';
+require_once 'includes/mcs-database.php';
 
 User::setSubclass('MCSUser');
+
+$db = new MCSDatabase();
+MCSUser::setDatabaseConnection($db);
 
 session_start();
 
