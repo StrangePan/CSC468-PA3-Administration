@@ -15,10 +15,13 @@
 		
 		$user = User::getCurrentUser();
 		_echo ('$user = User::getCurrentUser()', $user);
-		_echo ('$user->getUsername()', $user->getUsername());
-		_echo ('$user->getDisplayName()', $user->getDisplayName());
-		_echo ('$user->hasPermission(\''.$perm.'\')', $user->hasPermission($perm));
-		_echo ('$user->logOut()', $user->logOut());
+		if ($user)
+		{
+		  _echo ('$user->getUsername()', $user->getUsername());
+		  _echo ('$user->getDisplayName()', $user->getDisplayName());
+		  _echo ('$user->hasPermission(\''.$perm.'\')', $user->hasPermission($perm));
+		  _echo ('$user->logOut()', $user->logOut());
+		}
 		
 		_echo ('User::isAuthenticated()', User::isAuthenticated());
 		_echo ('User::getCurrentUser()', User::getCurrentUser());

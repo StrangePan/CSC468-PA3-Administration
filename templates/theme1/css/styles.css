@@ -1,0 +1,187 @@
+/* General page layout styles */
+
+html,body {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-size: 62.5%;   /* for use with REM sizing. 1rem = 10px */
+  background-color: #C1A868;
+  /*
+  193,168,104
+  62, 87, 151
+  31, 43, 75
+  224,211,179
+  */
+  background-color: #E0D3B3;
+
+}
+
+header {
+  display: block;
+  margin: 0 auto;
+  padding: 1.5rem;
+  overflow: hidden;
+  max-width: calc(1000px - 2*1.5rem); /* 1000px - padding */
+}
+
+footer {
+  display: block;
+  margin: 0 auto;
+  padding: 1rem;
+  max-width: calc(1000px - 2*1rem); /* 1000px - padding */
+}
+
+
+/* Header styles */
+
+.header-wrapper {
+  display: block;
+  background-color: white;
+}
+
+header h1 {
+  font-size: 2rem;
+}
+header h2 {
+  font-size: 1.5rem;
+}
+header h1 + h2 {
+  margin-top: -0.75em;
+}
+
+img.logo {
+  float: left;
+  height: 8em;
+  margin-right: 3em;
+}
+
+
+/* Header login styles */
+
+header form.login,
+header form.logout {
+  display: block;
+  float: right;
+  margin: 0;
+  margin-left: 2em;
+}
+
+header form.login > *,
+header form.logout > * {
+  float: left;
+  margin-left: 0.5em;
+}
+header form.login > *:first-child {
+  margin-left: 0;
+}
+
+header form.login label,
+header form.logout span {
+  font-size: 1.25em;
+}
+
+header form.login label input[type="text"],
+header form.login label input[type="password"] {
+  display: block;
+  width: 10em;
+}
+
+header form.login button,
+header form.logout button {
+  font-size: 1em;
+}
+header form.login button {
+  margin-top: calc(1.25em - 1px);
+}
+
+
+/* Main navigation styles */
+
+.main-nav {
+  display: block;
+  padding: 0;
+  background-color: #011C4F; /* sdsmt blue */
+  border: 2px solid #c1a868; /* sdsmt gold */
+  border-left-width: 0;
+  border-right-width: 0;
+  box-shadow: 0px 6px 22px -8px rgba(0,0,0,0.5);
+}
+
+.main-nav ul {
+  display: block;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 1000px;
+  list-style: none;
+  text-align: left;
+  font-size: 0;
+}
+
+.main-nav ul li {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+.main-nav ul li a {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  margin: 0;
+  font-size: 1.25rem;
+  color: white;
+  transition: background-color 0.125s linear;
+  text-decoration: none;
+}
+.main-nav ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+
+/* Page content styles */
+
+.content-wrapper {
+  display: block;
+  margin: 0;
+  padding: 0;
+  
+  background-color: #EEEDEB;
+}
+
+.contents {
+  display: block;
+  margin: 0 auto;
+  padding: 2rem;
+  max-width: calc(1000px - 2*2rem);
+  min-height: 32em;
+  
+  font-size: 1.2rem;
+  background-color: white;
+  box-shadow: -12px 0px 32px -16px rgba(0, 0, 0, 0.5),
+               12px 0px 32px -16px rgba(0, 0, 0, 0.5);
+}
+
+
+/* Footer styles */
+
+.footer-wrapper {
+  display: block;
+  margin: 0;
+  padding: 0;
+  
+  border: 2px solid #C1A868;
+  border-bottom-width: 0;
+  border-right-width: 0;
+  border-left-width: 0;
+  
+  background-color: #011C4F;
+  color: white;
+}
+
+footer {
+  font-size: 1rem;
+}
+
+/* Footer navigation styles */
+

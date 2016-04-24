@@ -39,9 +39,12 @@ function extractHeadAndTitle($page)
         if(isset($matches[3]))
         {
             $pageTitle = trim($matches[3]);
-            $titlePattern = "#$matches[2]#";
 
-            $headContents = preg_replace($titlePattern, '', $headContents);
+            $headContents = str_replace($matches[2], '', $headContents);
+        }
+        else
+        {
+            $pageTitle = false;
         }
     }
 }
@@ -62,6 +65,53 @@ function extractBody($page)
     {
         $bodyContents = trim($matches[1], "\r\n");
     }
+}
+
+
+
+function headTitle()
+{
+    global $pageTitle;
+    return $pageTitle;
+}
+
+function headContents()
+{
+    global $headContents;
+    return $headContents;
+}
+
+function pageContents()
+{
+    global $bodyContents;
+    return $bodyContents;
+}
+
+function mainNavigation()
+{
+    global $CONFIG;
+    
+    ob_start();
+?>
+<ul>
+<?php foreach ($CONFIG[CONFIG_MAIN_NAV_KEY] as $item) : ?>
+  <li><a href="<?php echo $item['href']; ?>"><?php echo $item['label']; ?></a></li>
+<?php endforeach; ?>
+</ul>
+    <?php
+    return ob_get_clean();
+}
+
+function footerNavigation()
+{
+    // TODO
+    return "";
+}
+
+function templateUrl()
+{
+    global $CONFIG;
+    return '/templates/'.$CONFIG[CONFIG_TEMPLATE_KEY];
 }
 
 ?>
