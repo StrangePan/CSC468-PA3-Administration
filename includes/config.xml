@@ -16,4 +16,6 @@
 			<href>/pages/test</href>
 		</item>
 	</mainNav>
+	
+	<adminPermission>admin.*</adminPermission>
 </config>
