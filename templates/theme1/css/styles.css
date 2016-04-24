@@ -15,6 +15,7 @@ body {
   224,211,179
   */
   background-color: #E0D3B3;
+  background-color: #011C4F;
 
 }
 
@@ -103,7 +104,7 @@ header form.login button {
   display: block;
   padding: 0;
   background-color: #011C4F; /* sdsmt blue */
-  border: 2px solid #c1a868; /* sdsmt gold */
+  border: 2px solid #C1A868; /* sdsmt gold */
   border-left-width: 0;
   border-right-width: 0;
   box-shadow: 0px 6px 22px -8px rgba(0,0,0,0.5);

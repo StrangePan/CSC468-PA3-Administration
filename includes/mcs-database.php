@@ -2,13 +2,13 @@
 
 class MCSDatabase extends SQLite3
 {
-  const DATABASE_FILENAME = __DIR__.'/MCS.db';
-  const SCRIPTS_DIRECTORY = __DIR__.'/sql';
-  const SCRIPT_CREATE_TABLES = self::SCRIPTS_DIRECTORY.'/CreateTables.sql';
+  const DATABASE_FILENAME = 'MCS.db';
+  const SCRIPTS_DIRECTORY = 'sql';
+  const SCRIPT_CREATE_TABLES = 'CreateTables.sql';
   
   function __construct()
   {
-    $this->open(self::DATABASE_FILENAME);
+    $this->open(__DIR__.'/'.self::DATABASE_FILENAME);
   }
   
   function __destruct()
@@ -21,7 +21,7 @@ class MCSDatabase extends SQLite3
    */
   function createTables()
   {
-    $query = file_get_contents(self::SCRIPT_CREATE_TABLES);
+    $query = file_get_contents(__DIR__.'/'.self::SCRIPTS_DIRECTORY.'/'.self::SCRIPT_CREATE_TABLES);
     if ($query)
     {
       $this->query($query);

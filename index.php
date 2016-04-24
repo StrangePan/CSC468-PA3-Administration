@@ -9,7 +9,10 @@ User::setSubclass('MCSUser');
 $db = new MCSDatabase();
 MCSUser::setDatabaseConnection($db);
 
-session_start();
+// Start PHP session (only if not already set)
+if (session_id() == '') {
+  session_start();
+}
 
 require_once 'includes/login.php';
 

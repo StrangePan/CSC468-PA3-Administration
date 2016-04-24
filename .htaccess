@@ -1,3 +1,9 @@
 RewriteEngine On
 
 RewriteRule ^.*(\?.*)?$ index.php$1 [L]
+
+php_flag display_startup_errors on
+php_flag display_errors on
+php_flag html_errors on
+php_flag log_errors on
+php_value error_log /home/student/1989750/www/CSC468_PA3_Administration/php_errors.log
