@@ -31,7 +31,7 @@ class MCSDatabase extends SQLite3
   /**
    * Get all permissions that a user has, factoring in group inheritance
    */
-  function selectPermissionsForUser($username)
+  function selectPermissionsForUserByName($username)
   {
     $username = parent::escapeString($username);
     
@@ -55,6 +55,47 @@ class MCSDatabase extends SQLite3
       INNER JOIN Users
       ON Users.ID = GroupMembers.UserID
       WHERE Users.Name = '$username';
+EOF;
+    
+    $results = $this->query($query);
+    $permissions = array();
+    
+    if (!is_bool($results))
+    {
+      while ($row = $results->fetchArray())
+      {
+        $permissions[] = $row[0];
+        $permissions[$row[0]] = TRUE;
+      }
+    }
+    
+    return $permissions;
+  }
+  
+  function selectPermissionsForUserByID($ID)
+  {
+    $ID = parent::escapeString($ID);
+    
+    $query = <<<EOF
+      SELECT Permissions.Name as Permission
+      FROM Permissions
+      INNER JOIN UserPermissions
+      ON UserPermissions.PermissionID = Permissions.ID
+      INNER JOIN Users
+      ON UserPermissions.UserID = Users.ID
+      WHERE Users.ID = '$ID'
+      UNION
+      SELECT Permissions.Name as Permission
+      FROM Permissions
+      INNER JOIN GroupPermissions
+      ON GroupPermissions.PermissionID = Permissions.ID
+      INNER JOIN Groups
+      ON GroupPermissions.GroupID = Groups.ID
+      INNER JOIN GroupMembers
+      ON GroupMembers.GroupID = Groups.ID
+      INNER JOIN Users
+      ON Users.ID = GroupMembers.UserID
+      WHERE Users.ID = '$ID';
 EOF;
     
     $results = $this->query($query);
@@ -106,7 +147,7 @@ EOF;
     
     if (!is_bool($results))
     {
-      while ($ow = $results->fetchArray())
+      while ($row = $results->fetchArray())
       {
         $users[] = $row[0];
         $users[$row[0]] = TRUE;
@@ -116,5 +157,62 @@ EOF;
     return $users;
   }
   
+  function selectGroupsForUser($username)
+  {
+    $username = parent::escapeString($username);
+    
+    $query = <<<EOF
+      SELECT Groups.Name
+	  FROM Groups
+	  INNER JOIN GroupMembers
+	  ON Groups.ID = GroupMembers.GroupID
+	  INNER JOIN Users
+	  ON GroupMembers.UserID = Users.ID
+	  WHERE Users.Name = '$username';
+EOF;
+    
+    $results = $this->query($query);
+    $groups = array();
+    
+    if (!is_bool($results))
+    {
+      while ($row = $results->fetchArray())
+      {
+        $groups[] = $row[0];
+        $groups[$row[0]] = TRUE;
+      }
+    }
+    
+    return $groups;
+  }
+
+  function selectUserPermissionsByName($username)
+  {
+    $username = parent::escapeString($username);
+    
+    $query = <<<EOF
+      SELECT Permissions.Name
+	  FROM Permissions
+	  INNER JOIN UserPermissions
+	  ON Permissions.ID = UserPermissions.PermissionID
+	  INNER JOIN Users
+	  ON UserPermissions.UserID = Users.ID
+	  WHERE Users.Name = '$username';
+EOF;
+    
+    $results = $this->query($query);
+    $userPermissions = array();
+    
+    if (!is_bool($results))
+    {
+      while ($row = $results->fetchArray())
+      {
+        $userPermissions[] = $row[0];
+        $userPermissions[$row[0]] = TRUE;
+      }
+    }
+    
+    return $userPermissions;
+  }   
 }
 
