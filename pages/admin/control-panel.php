@@ -28,10 +28,10 @@ $type = TYPE_NONE;
 $id = NULL;
 
 // Determine if we should display either group or user controls
-if (isset($_GET['g'])) {
+if (isset($_GET['g']) && isset($allGroups[$_GET['g']])) {
   $type = TYPE_GROUP;
   $id = $_GET['g'];
-} elseif (isset($_GET['u'])) {
+} elseif (isset($_GET['u']) && isset($allUsers[$_GET['u']])) {
   $type = TYPE_USER;
   $id = $_GET['u'];
 }
@@ -46,6 +46,7 @@ case TYPE_GROUP:
   
 case TYPE_USER:
   $name = (isset($allUsers[$id]) ? $allUsers[$id] : '');
+  $displayName = '';
   $permissions = array(); // TODO $db->selectPermissionsForUser($id);
   $groups = array(); // TODO $db->selectGroupsForUser($id);
   $inheritedPermissions = array();
@@ -97,6 +98,7 @@ case TYPE_USER:
     switch ($type) {
       case TYPE_GROUP: echo ' group-details'; break;
       case TYPE_USER:  echo ' user-details';  break;
+      case TYPE_NONE:  echo ' none-details';  break;
     }
     ?>">
       <div class="section-padding">
@@ -121,8 +123,56 @@ case TYPE_USER:
             <input type="submit" value="Update" />
           </form>
         </section>
+
+
+        <!-- Section to remove members from the group -->
+        <section class="group-members">
+          <h3>Members</h3>
+          <form method="post" action="">
+            
+            <ul class="items">
+<?php if (count($members) > 0) : ?>
+              
+              <!-- Existing members that can be removed -->
+<?php foreach ($members as $memberId=>$memberName) : ?>
+              <li>
+                <input type="checkbox" name="remove-member" value="<?php echo $memberId ?>" />
+                <a class="checkbox-label" href="?u=<?php echo $memberId ?>"><?php echo $memberName ?></a>
+              </li>
+<?php endforeach; ?>
+<?php else : ?>
+              <li>This group has no members</li>
+<?php endif; ?>
+            </ul>
+            
+            <input type="hidden" name="type" value="remove-members" />
+            <input type="submit" value="Remove Selected" />
+          </form>
+        </section>
         
-        <!-- Section to remove existing permissions from group -->
+        
+        <!-- Section to add new members to the group -->
+        <section class="add-members">
+          <h3>Add Members</h3>
+          <form method="post" action="">
+            <ul class="items">
+              <li>
+                <select name="member-select-1">
+                  <option value="" selected></option>
+<?php foreach ($allUsers as $memberId=>$memberName) : ?>
+                  <option value="<?php echo $memberId ?>"><?php echo $memberName ?></option>
+<?php endforeach; ?>
+                </select>
+              </li>
+            </ul>
+            
+            <input type="hidden" name="type" value="add-members" />
+            <input type="submit" value="Add Members" />
+          </form>
+        </section>
+
+
+       <!-- Section to remove existing permissions from group -->
         <section class="remove-permissions">
           <h3>Permissions</h3>
           <form method="post" action="">
@@ -173,60 +223,134 @@ case TYPE_USER:
         </section>
         
         
-        <!-- Section to remove members from the group -->
-        <section class="remove-members">
-          <h3>Remove Members</h3>
+<?php elseif ($type === TYPE_USER) : ?>
+        <!-- User settings and details -->
+        <h2>User Settings</h2>
+        
+        <section class="details">
+          <form method="post" action="">
+            
+            <!-- Database ID for the user -->
+            <label for="user-id">ID</label>
+            <input type="text" name="user-id" value="<?php echo $id ?>" disabled />
+            
+            <!-- Username -->
+            <label for="user-username">Username</label>
+            <input type="text" name="user-username" value="<?php echo $name ?>" disabled />
+            
+            <!-- User display name -->
+            <label for="user-name">Display Name</label>
+            <input type="text" name="user-name" value="<?php echo $displayName ?>" />
+            
+            <!-- Submission button -->
+            <input type="hidden" name="type" value="details" />
+            <input type="submit" value="Update" />
+          </form>
+        </section>
+
+
+       <!-- Section to remove existing permissions from group -->
+        <section class="remove-permissions">
+          <h3>Permissions</h3>
           <form method="post" action="">
             
             <ul class="items">
-<?php if (count($members) > 0) : ?>
+<?php if (count($permissions) > 0) : ?>
               
-              <!-- Existing members that can be removed -->
-<?php foreach ($members as $memberId=>$memberName) : ?>
+              <!-- Existing permissions that can be removed -->
+<?php foreach ($permissions as $permissionId=>$permissionName) : ?>
               <li>
                 <label>
-                  <input type="checkbox" name="remove-member" value="<?php echo $memberId ?>" />
-                  <span class="checkbox-label"><?php echo $memberName ?></span>
+                  <input type="checkbox" name="remove-permission" value="<?php echo $permissionId ?>" />
+                  <span class="checkbox-label"><?php echo $permissionName ?></span>
                 </label>
               </li>
 <?php endforeach; ?>
 <?php else : ?>
-              <li>This group has no members</li>
+              <li>This user has no permissions</li>
 <?php endif; ?>
             </ul>
             
-            <input type="hidden" name="type" value="remove-members" />
+            <input type="hidden" name="type" value="remove-permissions" />
             <input type="submit" value="Remove Selected" />
           </form>
         </section>
         
         
-        <!-- Section to add new members to the group -->
-        <section class="add-members">
-          <h3>Add Members</h3>
+        <!-- Section to add new permissions to the group -->
+        <section class="add-permissions">
+          <h3>Add Permissions</h3>
           <form method="post" action="">
             <ul class="items">
               <li>
-                <select name="member-select-1">
+                <select name="permission-select-1">
                   <option value="" selected></option>
-<?php foreach ($allUsers as $memberId=>$memberName) : ?>
-                  <option value="<?php echo $memberId ?>"><?php echo $memberName ?></option>
+<?php foreach ($allPermissions as $permissionId=>$permissionName) : ?>
+                  <option value="<?php echo $permissionId ?>"><?php echo $permissionName ?></option>
 <?php endforeach; ?>
                 </select>
                 or
-                <input type="text" name="member-text-1" />
+                <input type="text" name="permission-text-1" />
               </li>
             </ul>
             
-            <input type="hidden" name="type" value="add-members" />
-            <input type="submit" value="Add Members" />
+            <input type="hidden" name="type" value="add-permissions" />
+            <input type="submit" value="Add Permissions" />
+          </form>
+        </section>
+        
+        
+        <!-- Section to remove the user from groups  -->
+        <section class="remove-from-groups">
+          <h3>Groups</h3>
+          <form method="post" action="">
+            
+            <ul class="items">
+<?php if (count($groups) > 0) : ?>
+              
+              <!-- Existing members that can be removed -->
+<?php foreach ($groups as $groupId=>$groupName) : ?>
+              <li>
+                <input type="checkbox" name="remove-from-group" value="<?php echo $groupId ?>" />
+                <a class="checkbox-label" href="?g=<?php echo $groupId ?>"><?php echo $groupName ?></a>
+              </li>
+<?php endforeach; ?>
+<?php else : ?>
+              <li>This user belongs to no groups</li>
+<?php endif; ?>
+            </ul>
+            
+            <input type="hidden" name="type" value="remove-from-groups" />
+            <input type="submit" value="Remove from Selected" />
+          </form>
+        </section>
+        
+        
+        <!-- Section to add user to new groups -->
+        <section class="add-to-groups">
+          <h3>Add to Groups</h3>
+          <form method="post" action="">
+            <ul class="items">
+              <li>
+                <select name="group-select-1">
+                  <option value="" selected></option>
+<?php foreach ($allGroups as $groupId=>$groupName) : ?>
+                  <option value="<?php echo $groupId ?>"><?php echo $groupName ?></option>
+<?php endforeach; ?>
+                </select>
+              </li>
+            </ul>
+            
+            <input type="hidden" name="type" value="add-to-groups" />
+            <input type="submit" value="Add to Groups" />
           </form>
         </section>
 
 
-<?php elseif ($type === TYPE_USER) : ?>
-        <!-- User settings and details -->
-        <h2>User Settings</h2>
+<?php elseif ($type === TYPE_NONE) : ?>
+        
+        <h2>Select a group or user from the list</h2>
+        
 <?php endif; ?>
         
       </div>
