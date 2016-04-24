@@ -17,5 +17,5 @@
 		</item>
 	</mainNav>
 	
-	<adminPermission>admin.*</adminPermission>
+	<adminPermission>AdminPermission</adminPermission>
 </config>
