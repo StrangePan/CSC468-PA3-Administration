@@ -233,7 +233,7 @@ EOF;
     if($results == true)
     {
       $query = <<<EOF
-        SELECT * as User
+        SELECT *
         FROM Users
         WHERE Users.Name = '$username';
 EOF;
@@ -289,7 +289,7 @@ EOF;
     if($results == true)
     {
       $query = <<<EOF
-        SELECT * as Group
+        SELECT *
         FROM Groups
         WHERE Groups.Name = '$group';
 EOF;
@@ -345,7 +345,7 @@ EOF;
     if($results == true)
     {
       $query = <<<EOF
-        SELECT * as Permission
+        SELECT *
         FROM Users
         WHERE Permissions.Name = '$permission';
 EOF;
@@ -546,7 +546,7 @@ EOF;
   function fetchAllUsers()
   {
     $query = <<<EOF
-      SELECT * as User FROM Users;
+      SELECT * FROM Users;
 EOF;
 
     $results = $this->query($query);
@@ -570,7 +570,7 @@ EOF;
   function fetchAllGroups()
   {
     $query = <<<EOF
-      SELECT * as Group FROM Groups;
+      SELECT * FROM Groups;
 EOF;
 
     $results = $this->query($query);
@@ -594,7 +594,7 @@ EOF;
   function fetchAllPermissions()
   {
     $query = <<<EOF
-      SELECT * as Permission FROM Permissions;
+      SELECT * FROM Permissions;
 EOF;
 
     $results = $this->query($query);
@@ -660,7 +660,7 @@ EOF;
     if($results == true)
     {
       $query = <<<EOF
-        SELECT * as Group
+        SELECT *
         FROM Groups
         WHERE Groups.Name = '$newGroup';
 EOF;
