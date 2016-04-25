@@ -119,7 +119,9 @@ case TYPE_USER:
             <input type="text" name="group-name" value="<?php echo $name ?>" />
             
             <!-- Submission button -->
-            <input type="hidden" name="type" value="details" />
+            <input type="hidden" name="task" value="update-details" />
+            <input type="hidden" name="class" value="group" />
+            <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Update" />
           </form>
         </section>
@@ -136,7 +138,7 @@ case TYPE_USER:
               <!-- Existing members that can be removed -->
 <?php foreach ($members as $memberId=>$memberName) : ?>
               <li>
-                <input type="checkbox" name="remove-member" value="<?php echo $memberId ?>" />
+                <input type="checkbox" name="member[]" value="<?php echo $memberId ?>" />
                 <a class="checkbox-label" href="?u=<?php echo $memberId ?>"><?php echo $memberName ?></a>
               </li>
 <?php endforeach; ?>
@@ -145,7 +147,9 @@ case TYPE_USER:
 <?php endif; ?>
             </ul>
             
-            <input type="hidden" name="type" value="remove-members" />
+            <input type="hidden" name="task" value="remove-members" />
+            <input type="hidden" name="class" value="group" />
+            <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Remove Selected" />
           </form>
         </section>
@@ -157,7 +161,7 @@ case TYPE_USER:
           <form method="post" action="">
             <ul class="items">
               <li>
-                <select name="member-select-1">
+                <select name="member[]">
                   <option value="" selected></option>
 <?php foreach ($allUsers as $memberId=>$memberName) : ?>
                   <option value="<?php echo $memberId ?>"><?php echo $memberName ?></option>
@@ -166,7 +170,9 @@ case TYPE_USER:
               </li>
             </ul>
             
-            <input type="hidden" name="type" value="add-members" />
+            <input type="hidden" name="task" value="add-members" />
+            <input type="hidden" name="class" value="group" />
+            <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Add Members" />
           </form>
         </section>
@@ -184,7 +190,7 @@ case TYPE_USER:
 <?php foreach ($permissions as $permissionId=>$permissionName) : ?>
               <li>
                 <label>
-                  <input type="checkbox" name="remove-permission" value="<?php echo $permissionId ?>" />
+                  <input type="checkbox" name="permission[]" value="<?php echo $permissionId ?>" />
                   <span class="checkbox-label"><?php echo $permissionName ?></span>
                 </label>
               </li>
@@ -194,7 +200,9 @@ case TYPE_USER:
 <?php endif; ?>
             </ul>
             
-            <input type="hidden" name="type" value="remove-permissions" />
+            <input type="hidden" name="task" value="remove-permissions" />
+            <input type="hidden" name="class" value="group" />
+            <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Remove Selected" />
           </form>
         </section>
@@ -206,18 +214,20 @@ case TYPE_USER:
           <form method="post" action="">
             <ul class="items">
               <li>
-                <select name="permission-select-1">
+                <select name="permission-id[]">
                   <option value="" selected></option>
 <?php foreach ($allPermissions as $permissionId=>$permissionName) : ?>
                   <option value="<?php echo $permissionId ?>"><?php echo $permissionName ?></option>
 <?php endforeach; ?>
                 </select>
                 or
-                <input type="text" name="permission-text-1" />
+                <input type="text" name="permission-name[]" />
               </li>
             </ul>
             
-            <input type="hidden" name="type" value="add-permissions" />
+            <input type="hidden" name="task" value="add-permissions" />
+            <input type="hidden" name="class" value="group" />
+            <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Add Permissions" />
           </form>
         </section>
@@ -243,7 +253,9 @@ case TYPE_USER:
             <input type="text" name="user-name" value="<?php echo $displayName ?>" />
             
             <!-- Submission button -->
-            <input type="hidden" name="type" value="details" />
+            <input type="hidden" name="task" value="update-details" />
+            <input type="hidden" name="class" value="user" />
+            <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Update" />
           </form>
         </section>
@@ -261,7 +273,7 @@ case TYPE_USER:
 <?php foreach ($permissions as $permissionId=>$permissionName) : ?>
               <li>
                 <label>
-                  <input type="checkbox" name="remove-permission" value="<?php echo $permissionId ?>" />
+                  <input type="checkbox" name="permission[]" value="<?php echo $permissionId ?>" />
                   <span class="checkbox-label"><?php echo $permissionName ?></span>
                 </label>
               </li>
@@ -271,7 +283,9 @@ case TYPE_USER:
 <?php endif; ?>
             </ul>
             
-            <input type="hidden" name="type" value="remove-permissions" />
+            <input type="hidden" name="task" value="remove-permissions" />
+            <input type="hidden" name="class" value="user" />
+            <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Remove Selected" />
           </form>
         </section>
@@ -283,18 +297,20 @@ case TYPE_USER:
           <form method="post" action="">
             <ul class="items">
               <li>
-                <select name="permission-select-1">
+                <select name="permission-id[]">
                   <option value="" selected></option>
 <?php foreach ($allPermissions as $permissionId=>$permissionName) : ?>
                   <option value="<?php echo $permissionId ?>"><?php echo $permissionName ?></option>
 <?php endforeach; ?>
                 </select>
                 or
-                <input type="text" name="permission-text-1" />
+                <input type="text" name="permission-name[]" />
               </li>
             </ul>
             
-            <input type="hidden" name="type" value="add-permissions" />
+            <input type="hidden" name="task" value="add-permissions" />
+            <input type="hidden" name="class" value="user" />
+            <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Add Permissions" />
           </form>
         </section>
@@ -311,7 +327,7 @@ case TYPE_USER:
               <!-- Existing members that can be removed -->
 <?php foreach ($groups as $groupId=>$groupName) : ?>
               <li>
-                <input type="checkbox" name="remove-from-group" value="<?php echo $groupId ?>" />
+                <input type="checkbox" name="group[]" value="<?php echo $groupId ?>" />
                 <a class="checkbox-label" href="?g=<?php echo $groupId ?>"><?php echo $groupName ?></a>
               </li>
 <?php endforeach; ?>
@@ -320,7 +336,9 @@ case TYPE_USER:
 <?php endif; ?>
             </ul>
             
-            <input type="hidden" name="type" value="remove-from-groups" />
+            <input type="hidden" name="task" value="remove-from-groups" />
+            <input type="hidden" name="class" value="user" />
+            <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Remove from Selected" />
           </form>
         </section>
@@ -332,7 +350,7 @@ case TYPE_USER:
           <form method="post" action="">
             <ul class="items">
               <li>
-                <select name="group-select-1">
+                <select name="group[]">
                   <option value="" selected></option>
 <?php foreach ($allGroups as $groupId=>$groupName) : ?>
                   <option value="<?php echo $groupId ?>"><?php echo $groupName ?></option>
@@ -341,7 +359,9 @@ case TYPE_USER:
               </li>
             </ul>
             
-            <input type="hidden" name="type" value="add-to-groups" />
+            <input type="hidden" name="task" value="add-to-groups" />
+            <input type="hidden" name="class" value="user" />
+            <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Add to Groups" />
           </form>
         </section>
