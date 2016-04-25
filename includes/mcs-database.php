@@ -618,12 +618,12 @@ EOF;
   function fetchAllUsersInGroup($group)
   {
     $query = <<<EOF
-      SELECT * as User FROM Users
-      WHERE (SELECT UserID FROM GroupMembers
-             WHERE (SELECT ID FROM Groups
-                    WHERE Groups.Name = '$group')
-             = GroupMembers.GroupID)
-      = Users.ID;
+      SELECT Users.Name
+	  FROM Users
+	  INNER JOIN GroupMembers
+	  ON Users.ID = GroupMembers.UserID
+	  INNER JOIN Groups
+	  ON Groups.Name = '$group';
 EOF;
 
     $results = $this->query($query);
