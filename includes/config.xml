@@ -8,14 +8,25 @@
 			<href>/</href>
 		</item>
 		<item>
-			<label>Login</label>
-			<href>/pages/login</href>
-		</item>
-		<item>
-			<label>Test</label>
-			<href>/pages/test</href>
-		</item>
+		  <label>Submit</label>
+		  <href>#</href>
+	  </item>
+	  <item>
+	    <label>Resources</label>
+	    <href>#</href>
+    </item>
+    <item>
+      <label>Students</label>
+      <href>#</href>
+    </item>
 	</mainNav>
+	
+	<footerNav>
+	  <item>
+			<label>Admin</label>
+			<href>/pages/admin</href>
+	  </item>
+	</footerNav>
 	
 	<adminPermission>AdminPermission</adminPermission>
 </config>

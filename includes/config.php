@@ -6,6 +6,7 @@ $CONFIG = array();
 define('CONFIG_FILENAME', __DIR__.'/config.xml');
 define('CONFIG_TEMPLATE_KEY', 'template');
 define('CONFIG_MAIN_NAV_KEY', 'mainNav');
+define('CONFIG_FOOTER_NAV_KEY', 'footerNav');
 define('CONFIG_ADMIN_PERMISSION_KEY', 'adminPermission');
 
 // Load and parse config.xml
@@ -25,6 +26,18 @@ if ($xml) {
         
         foreach ($xml->mainNav->item as $item) {
             $CONFIG[CONFIG_MAIN_NAV_KEY][] = array(
+                'label' => $item->label,
+                'href'  => $item->href
+            );
+        }
+    }
+    
+    // extract footer navigation
+    if (isset($xml->footerNav)) {
+        $CONFIG[CONFIG_FOOTER_NAV_KEY] = array();
+        
+        foreach ($xml->footerNav->item as $item) {
+            $CONFIG[CONFIG_FOOTER_NAV_KEY][] = array(
                 'label' => $item->label,
                 'href'  => $item->href
             );

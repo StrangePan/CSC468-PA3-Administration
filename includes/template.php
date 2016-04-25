@@ -104,8 +104,20 @@ function mainNavigation()
 
 function footerNavigation()
 {
-    // TODO
-    return "";
+    global $CONFIG;
+    
+    ob_start();
+?>
+<ul>
+<?php foreach ($CONFIG[CONFIG_MAIN_NAV_KEY] as $item) : ?>
+  <li><a href="<?php echo $item['href']; ?>"><?php echo $item['label']; ?></a></li>
+<?php endforeach; ?>
+<?php foreach ($CONFIG[CONFIG_FOOTER_NAV_KEY] as $item) : ?>
+  <li><a href="<?php echo $item['href']; ?>"><?php echo $item['label']; ?></a></li>
+<?php endforeach; ?>
+</ul>
+    <?php
+    return ob_get_clean();
 }
 
 function templateUrl()
