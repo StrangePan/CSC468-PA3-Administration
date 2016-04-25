@@ -252,6 +252,24 @@ EOF;
     
     return $users;
   }
+  
+  /**
+   * Attempts to remove a user, returns a boolean
+   * representing success.
+   */
+  function removeUser($user)
+  {
+    $user = parent::escapeString($user);
+
+    $query = <<<EOF
+      DELETE FROM Users
+      Where Users.Name = $user
+EOF;
+
+    $results = $this->query($query);
+    
+    return $results;
+  }
 
   /**
    * Attempts to insert a group with a given name, returns either an array
@@ -290,6 +308,24 @@ EOF;
     
     return $groups;
   }
+  
+  /**
+   * Attempts to remove a group, returns a boolean
+   * representing success.
+   */
+  function removeGroup($group)
+  {
+    $group] = parent::escapeString($group);
+
+    $query = <<<EOF
+      DELETE FROM Groups
+      Where Groups.Name = $group
+EOF;
+
+    $results = $this->query($query);
+    
+    return $results;
+  }
 
   /**
    * Attempts to insert a permission with a given name, returns either an array
@@ -327,6 +363,24 @@ EOF;
     }
     
     return $permissions;
+  }
+  
+  /**
+   * Attempts to remove a permission, returns a boolean
+   * representing success.
+   */
+  function removePermission($permission)
+  {
+    $permission = parent::escapeString($permission);
+
+    $query = <<<EOF
+      DELETE FROM Permissions
+      Where Permissions.Name = $permission
+EOF;
+
+    $results = $this->query($query);
+    
+    return $results;
   }
 
   /**
@@ -388,6 +442,26 @@ EOF;
     
     return $results;
   }
+  
+  /**
+   * Attempts to remove a permission from a user, returns a boolean
+   * representing success.
+   */
+  function removePermissionFromUser($permission, $username)
+  {
+    $permission = parent::escapeString($permission);
+    $username = parent::escapeString($username);
+
+    $query = <<<EOF
+      DELETE FROM Permissions
+      Where( (SELECT ID FROM Users WHERE Users.Name = '$username') = UserPermissions.UserID
+      AND (SELECT ID FROM Permissions WHERE Permissions.Name = '$permission') = Permissions.ID);
+EOF;
+
+    $results = $this->query($query);
+    
+    return $results;
+  }
 
   /**
    * Attempts to add a permission to a group, returns a boolean
@@ -408,7 +482,27 @@ EOF;
     
     return $results;
   }
+  
+  /**
+   * Attempts to remove a permission from a group, returns a boolean
+   * representing success.
+   */
+  function removePermissionFromGroup($permission, $group)
+  {
+    $permission = parent::escapeString($permission);
+    $group = parent::escapeString($group);
 
+    $query = <<<EOF
+      DELETE FROM Permissions
+      Where( (SELECT ID FROM Groups WHERE Groups.Name = '$group') = GroupPermissions.GroupID
+      AND (SELECT ID FROM Permissions WHERE Permissions.Name = '$permission') = Permissions.ID);
+EOF;
+
+    $results = $this->query($query);
+    
+    return $results;
+  }
+  
   function selectInheritedPermissions($username)
   {
     $username = parent::escapeString($username);
