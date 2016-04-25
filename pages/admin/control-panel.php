@@ -73,6 +73,7 @@ case TYPE_USER:
 <html>
   <head>
     <title>Admin</title>
+    <link rel="stylesheet" type="text/css" href="admin.css" />
   </head>
   <body>
   
@@ -173,7 +174,7 @@ case TYPE_USER:
             <ul class="items">
               <li>
                 <select name="member[]">
-                  <option value="" selected></option>
+                  <option value="" selected>Select User</option>
 <?php foreach ($allUsers as $memberId=>$memberArray) : ?>
                   <option value="<?php echo $memberId ?>"><?php echo $memberArray['Name'] ?></option>
 <?php endforeach; ?>
@@ -226,13 +227,13 @@ case TYPE_USER:
             <ul class="items">
               <li>
                 <select name="permission-id[]">
-                  <option value="" selected></option>
+                  <option value="" selected>Select Permission</option>
 <?php foreach ($allPermissions as $permissionId=>$permissionArray) : ?>
                   <option value="<?php echo $permissionId ?>"><?php echo $permissionArray['Name'] ?></option>
 <?php endforeach; ?>
                 </select>
                 or
-                <input type="text" name="permission-name[]" />
+                <input type="text" name="permission-name[]" placeholder="Enter one manually" />
               </li>
             </ul>
             
@@ -267,7 +268,57 @@ case TYPE_USER:
             <input type="hidden" name="task" value="<?php echo TASK_UPDATE_DETAILS ?>" />
             <input type="hidden" name="class" value="<?php echo CLASS_USER ?>" />
             <input type="hidden" name="id" value="<?php echo $id ?>" />
-            <input type="submit" value="Update" />
+          </form>
+        </section>
+
+
+        <!-- Section to remove the user from groups  -->
+        <section class="remove-from-groups">
+          <h3>Groups</h3>
+          <form method="post" action="">
+            
+            <ul class="items">
+<?php if (count($groups) > 0) : ?>
+              
+              <!-- Existing members that can be removed -->
+<?php foreach ($groups as $groupId=>$groupArray) : ?>
+              <li>
+                <input type="checkbox" name="group[]" value="<?php echo $groupId ?>" />
+                <a class="checkbox-label" href="?g=<?php echo $groupId ?>"><?php echo $groupArray['Name'] ?></a>
+              </li>
+<?php endforeach; ?>
+<?php else : ?>
+              <li>This user belongs to no groups</li>
+<?php endif; ?>
+            </ul>
+            
+            <input type="hidden" name="task" value="<?php echo TASK_REMOVE_FROM_GROUPS ?>" />
+            <input type="hidden" name="class" value="<?php echo CLASS_USER ?>" />
+            <input type="hidden" name="id" value="<?php echo $id ?>" />
+            <input type="submit" value="Remove from Selected" />
+          </form>
+        </section>
+        
+        
+        <!-- Section to add user to new groups -->
+        <section class="add-to-groups">
+          <h3>Add to Groups</h3>
+          <form method="post" action="">
+            <ul class="items">
+              <li>
+                <select name="group[]">
+                  <option value="" selected>Select Group</option>
+<?php foreach ($allGroups as $groupId=>$groupArray) : ?>
+                  <option value="<?php echo $groupId ?>"><?php echo $groupArray['Name'] ?></option>
+<?php endforeach; ?>
+                </select>
+              </li>
+            </ul>
+            
+            <input type="hidden" name="task" value="<?php echo TASK_ADD_TO_GROUPS ?>" />
+            <input type="hidden" name="class" value="<?php echo CLASS_USER ?>" />
+            <input type="hidden" name="id" value="<?php echo $id ?>" />
+            <input type="submit" value="Add to Groups" />
           </form>
         </section>
 
@@ -309,13 +360,13 @@ case TYPE_USER:
             <ul class="items">
               <li>
                 <select name="permission-id[]">
-                  <option value="" selected></option>
+                  <option value="" selected>Select Permission</option>
 <?php foreach ($allPermissions as $permissionId=>$permissionArray) : ?>
                   <option value="<?php echo $permissionId ?>"><?php echo $permissionArray['Name'] ?></option>
 <?php endforeach; ?>
                 </select>
                 or
-                <input type="text" name="permission-name[]" />
+                <input type="text" name="permission-name[]" placeholder="Enter one manually" />
               </li>
             </ul>
             
@@ -327,57 +378,6 @@ case TYPE_USER:
         </section>
         
         
-        <!-- Section to remove the user from groups  -->
-        <section class="remove-from-groups">
-          <h3>Groups</h3>
-          <form method="post" action="">
-            
-            <ul class="items">
-<?php if (count($groups) > 0) : ?>
-              
-              <!-- Existing members that can be removed -->
-<?php foreach ($groups as $groupId=>$groupArray) : ?>
-              <li>
-                <input type="checkbox" name="group[]" value="<?php echo $groupId ?>" />
-                <a class="checkbox-label" href="?g=<?php echo $groupId ?>"><?php echo $groupArray['Name'] ?></a>
-              </li>
-<?php endforeach; ?>
-<?php else : ?>
-              <li>This user belongs to no groups</li>
-<?php endif; ?>
-            </ul>
-            
-            <input type="hidden" name="task" value="<?php echo TASK_REMOVE_FROM_GROUPS ?>" />
-            <input type="hidden" name="class" value="<?php echo CLASS_USER ?>" />
-            <input type="hidden" name="id" value="<?php echo $id ?>" />
-            <input type="submit" value="Remove from Selected" />
-          </form>
-        </section>
-        
-        
-        <!-- Section to add user to new groups -->
-        <section class="add-to-groups">
-          <h3>Add to Groups</h3>
-          <form method="post" action="">
-            <ul class="items">
-              <li>
-                <select name="group[]">
-                  <option value="" selected></option>
-<?php foreach ($allGroups as $groupId=>$groupArray) : ?>
-                  <option value="<?php echo $groupId ?>"><?php echo $groupArray['Name'] ?></option>
-<?php endforeach; ?>
-                </select>
-              </li>
-            </ul>
-            
-            <input type="hidden" name="task" value="<?php echo TASK_ADD_TO_GROUPS ?>" />
-            <input type="hidden" name="class" value="<?php echo CLASS_USER ?>" />
-            <input type="hidden" name="id" value="<?php echo $id ?>" />
-            <input type="submit" value="Add to Groups" />
-          </form>
-        </section>
-
-
 <?php elseif ($type === TYPE_NONE) : ?>
         
         <h2>Select a group or user from the list</h2>

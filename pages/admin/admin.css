@@ -1,0 +1,94 @@
+.master-view {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 12rem;
+  padding: 1rem;'
+  
+  overflow: auto;
+  border: 0 solid #C1A868;
+  border-right-width: 2px;
+}
+
+.detail-view {
+  display: block;
+  margin: 0;
+  margin-left: 14rem;
+}
+
+.detail-view h2 {
+  margin-top: 0;
+  border-bottom: 1px solid;
+}
+
+.detail-view section {
+  display: block;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px dotted;
+}
+
+section.details {
+  overflow: hidden;
+}
+section.details label {
+  display: block;
+  float: left;
+  clear: both;
+  width: 20%;
+  text-align: right;
+}
+section.details label:after {
+  content: ":";
+}
+section.details input[type='text'] {
+  display: block;
+  float: left;
+  margin-left: .5rem;
+}
+section.details input[type='submit'],
+section.details button[type='submit'] {
+  float: left;
+  clear: both;
+  margin-left: calc(20% + 0.5rem);
+}
+
+.detail-view h3 {
+  display: block;
+  margin: 0;
+  padding: 0.25em;
+  background-color: rgba(1, 28, 79, 0.5);
+}
+
+ul.items {
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+ul.items li {
+  display: block;
+  padding: 0.25em;
+  background-color: rgba(1, 28, 79, 0.25);
+}
+ul.items li:nth-of-type(odd) {
+  background-color: rgba(1, 28, 79, 0.15);
+}
+ul.items input[type='checkbox'] {
+  margin-right: 1em;
+}
+ul.items select,
+ul.items input[type='text'] {
+  width: 15em;
+}
+
+.add-members ul.items li:before,
+.add-permissions ul.items li:before,
+.add-to-groups ul.items li:before {
+  content: "+";
+  margin-right: 1em;
+}
+
+
