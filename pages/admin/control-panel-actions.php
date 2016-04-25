@@ -12,7 +12,7 @@ $action = isset($_POST['action']) ? $_POST['action'] : FALSE;
 $class = isset($_POST['class']) ? $_POST['class'] : FALSE;
 
 // validate class
-if ($class !== 'group' && $class !== 'user') {
+if ($class !== CLASS_GROUP && $class !== CLASS_USER) {
   $class = FALSE;
 }
 
@@ -20,24 +20,33 @@ if ($class !== 'group' && $class !== 'user') {
 if ($id !== FALSE && $action !== FALSE && $class !== FALSE) :
 
 
+// update entity details
+if ($action === TASK_UPDATE_DETAILS && $class === CLASS_GROUP) {
+  $name = isset($_POST['name']) ? $_POST['name'] : FALSE;
+  
+  if ($name !== FALSE) {
+    // TODO change group's name
+  }
+}
+
 // remove permissions from group or user
-if ($action === 'remove-permissions') {
+elseif ($action === TASK_REMOVE_PERMISSIONS) {
   $permissions = isset($_POST['permission']) ? $_POST['permission'] : array();
   
   switch ($class)
   {
-  case 'group':
+  case CLASS_GROUP:
     // TODO remove permissions from group
     break;
     
-  case 'user':
+  case CLASS_USER:
     // TODO remove permissions from user
     break;
   }
 }
 
 // add permissions to group or user
-elseif ($action === 'add-permissions') {
+elseif ($action === TASK_ADD_PERMISSIONS) {
   
   if (isset($_POST['permission-id']) && isset($_POST['permission-name'])
       && count($_POST['permission-id']) == count($_POST['permission-name'])) {
@@ -68,39 +77,39 @@ elseif ($action === 'add-permissions') {
   
   switch ($class)
   {
-  case 'group':
+  case CLASS_GROUP:
     // TODO remove permissions by ID from group/user
     break;
     
-  case 'user':
+  case CLASS_USER:
     // TODO remove permissions by Name from group/user
     break;
   }
 }
 
 // remove members from group
-elseif ($action === 'remove-members' && $class === 'group') {
+elseif ($action === TASK_REMOVE_MEMBERS && $class === CLASS_GROUP) {
   $members = isset($_POST['member']) ? $_POST['member'] : array();
   
   // TODO remove permissions from group
 }
 
 // added members to group
-elseif ($action === 'add-members' && $class === 'group') {
+elseif ($action === TASK_ADD_MEMBERS && $class === CLASS_GROUP) {
   $members = isset($_POST['member']) ? $_POST['member'] : array();
   
   // TODO add new members to group
 }
 
 // remove member from group
-elseif ($action === 'remove-from-groups' && $class === 'user') {
+elseif ($action === TASK_REMOVE_FROM_GROUPS && $class === CLASS_USER) {
   $groups = isset($_POST['group']) ? $_POST['group'] : array();
   
   // TODO remove user from selected groups
 }
 
 // add member to group
-elseif ($action === 'add-to-groups' && $class === 'user') {
+elseif ($action === TASK_ADD_TO_GROUPS && $class === CLASS_USER) {
   $groups = isset($_POST['group']) ? $_POST['group'] : array();
   
   // TODO add user to selected groups

@@ -1,6 +1,16 @@
 <?php
 if (!defined('ADMIN_PAGE_INCLUDED')) die('Access denied');
 
+define ('TASK_UPDATE_DETAILS', 'updateDetails');
+define ('TASK_ADD_PERMISSIONS', 'addPermissions');
+define ('TASK_REMOVE_PERMISSIONS', 'removePermissions');
+define ('TASK_ADD_GROUP_MEMBERS', 'addMembers');
+define ('TASK_REMOVE_GROUP_MEMBERS', 'removeMembers');
+define ('TASK_ADD_TO_GROUPS', 'addGroups');
+define ('TASK_REMOVE_FROM_GROUPS', 'removeGroups');
+define ('CLASS_GROUP', 'group');
+define ('CLASS_USER', 'user');
+
 
 // Include and execute code for processing form submissions
 include 'control-panel-actions.php';
@@ -119,8 +129,8 @@ case TYPE_USER:
             <input type="text" name="group-name" value="<?php echo $name ?>" />
             
             <!-- Submission button -->
-            <input type="hidden" name="task" value="update-details" />
-            <input type="hidden" name="class" value="group" />
+            <input type="hidden" name="task" value="<?php echo TASK_UPDATE_DETAILS ?>" />
+            <input type="hidden" name="class" value="<?php echo CLASS_GROUP ?>" />
             <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Update" />
           </form>
@@ -147,8 +157,8 @@ case TYPE_USER:
 <?php endif; ?>
             </ul>
             
-            <input type="hidden" name="task" value="remove-members" />
-            <input type="hidden" name="class" value="group" />
+            <input type="hidden" name="task" value="<?php echo TASK_REMOVE_MEMBERS ?>" />
+            <input type="hidden" name="class" value="<?php echo CLASS_GROUP ?>" />
             <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Remove Selected" />
           </form>
@@ -170,8 +180,8 @@ case TYPE_USER:
               </li>
             </ul>
             
-            <input type="hidden" name="task" value="add-members" />
-            <input type="hidden" name="class" value="group" />
+            <input type="hidden" name="task" value="<?php echo TASK_ADD_MEMBERS ?>" />
+            <input type="hidden" name="class" value="<?php echo CLASS_GROUP ?>" />
             <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Add Members" />
           </form>
@@ -200,8 +210,8 @@ case TYPE_USER:
 <?php endif; ?>
             </ul>
             
-            <input type="hidden" name="task" value="remove-permissions" />
-            <input type="hidden" name="class" value="group" />
+            <input type="hidden" name="task" value="<?php echo TASK_REMOVE_PERMISSIONS ?>" />
+            <input type="hidden" name="class" value="<?php echo CLASS_GROUP ?>" />
             <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Remove Selected" />
           </form>
@@ -225,8 +235,8 @@ case TYPE_USER:
               </li>
             </ul>
             
-            <input type="hidden" name="task" value="add-permissions" />
-            <input type="hidden" name="class" value="group" />
+            <input type="hidden" name="task" value="<?php echo TASK_ADD_PERMISSIONS ?>" />
+            <input type="hidden" name="class" value="<?php echo CLASS_GROUP ?>" />
             <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Add Permissions" />
           </form>
@@ -250,11 +260,11 @@ case TYPE_USER:
             
             <!-- User display name -->
             <label for="user-name">Display Name</label>
-            <input type="text" name="user-name" value="<?php echo $displayName ?>" />
+            <input type="text" name="user-name" value="<?php echo $displayName ?>" disabled />
             
             <!-- Submission button -->
-            <input type="hidden" name="task" value="update-details" />
-            <input type="hidden" name="class" value="user" />
+            <input type="hidden" name="task" value="<?php echo TASK_UPDATE_DETAILS ?>" />
+            <input type="hidden" name="class" value="<?php echo CLASS_USER ?>" />
             <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Update" />
           </form>
@@ -283,8 +293,8 @@ case TYPE_USER:
 <?php endif; ?>
             </ul>
             
-            <input type="hidden" name="task" value="remove-permissions" />
-            <input type="hidden" name="class" value="user" />
+            <input type="hidden" name="task" value="<?php echo TASK_REMOVE_PERMISSIONS ?>" />
+            <input type="hidden" name="class" value="<?php echo CLASS_USER ?>" />
             <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Remove Selected" />
           </form>
@@ -308,8 +318,8 @@ case TYPE_USER:
               </li>
             </ul>
             
-            <input type="hidden" name="task" value="add-permissions" />
-            <input type="hidden" name="class" value="user" />
+            <input type="hidden" name="task" value="<?php echo TASK_ADD_PERMISSIONS ?>" />
+            <input type="hidden" name="class" value="<?php echo CLASS_USER ?>" />
             <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Add Permissions" />
           </form>
@@ -336,8 +346,8 @@ case TYPE_USER:
 <?php endif; ?>
             </ul>
             
-            <input type="hidden" name="task" value="remove-from-groups" />
-            <input type="hidden" name="class" value="user" />
+            <input type="hidden" name="task" value="<?php echo TASK_REMOVE_FROM_GROUPS ?>" />
+            <input type="hidden" name="class" value="<?php echo CLASS_USER ?>" />
             <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Remove from Selected" />
           </form>
@@ -359,8 +369,8 @@ case TYPE_USER:
               </li>
             </ul>
             
-            <input type="hidden" name="task" value="add-to-groups" />
-            <input type="hidden" name="class" value="user" />
+            <input type="hidden" name="task" value="<?php echo TASK_ADD_TO_GROUPS ?>" />
+            <input type="hidden" name="class" value="<?php echo CLASS_USER ?>" />
             <input type="hidden" name="id" value="<?php echo $id ?>" />
             <input type="submit" value="Add to Groups" />
           </form>
