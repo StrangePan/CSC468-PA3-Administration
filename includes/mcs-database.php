@@ -214,5 +214,199 @@ EOF;
     
     return $userPermissions;
   }   
+
+  /**
+   * Attempts to insert a user with a given name, returns either an array
+   * representing the record, or an empty array.
+   */
+  function createUser($username)
+  {
+    $username = parent::escapeString($username);
+
+    $query = <<<EOF
+      INSERT INTO Users(Name)
+      Values('$username');
+EOF;
+
+    $results = $this->query($query);
+
+    if($results == true)
+    {
+      $query = <<<EOF
+        SELECT * as User
+        FROM Users
+        WHERE Users.Name = '$username';
+EOF
+
+      $results = $this->query($query);
+      $users = array();
+      
+      if (!is_bool($results))
+      {
+        while ($row = $results->fetchArray())
+        {
+          $users[$row['ID']] = $row;
+        }
+      }
+    }
+    
+    return $users;
+  }
+
+  /**
+   * Attempts to insert a group with a given name, returns either an array
+   * representing the record, or an empty array.
+   */
+  function createGroup($group)
+  {
+    $group = parent::escapeString($group);
+
+    $query = <<<EOF
+      INSERT INTO Groups(Name)
+      Values('$group');
+EOF;
+
+    $results = $this->query($query);
+
+    if($results == true)
+    {
+      $query = <<<EOF
+        SELECT * as Group
+        FROM Groups
+        WHERE Groups.Name = '$group';
+EOF
+
+      $results = $this->query($query);
+      $groups = array();
+      
+      if (!is_bool($results))
+      {
+        while ($row = $results->fetchArray())
+        {
+          $groups[$row['ID']] = $row;
+        }
+      }
+    }
+    
+    return $groups;
+  }
+
+  /**
+   * Attempts to insert a permission with a given name, returns either an array
+   * representing the record, or an empty array.
+   */
+  function createPermission($permission)
+  {
+    $permission = parent::escapeString($permission);
+
+    $query = <<<EOF
+      INSERT INTO Permissions(Name)
+      Values('$permission');
+EOF;
+
+    $results = $this->query($query);
+
+    if($results == true)
+    {
+      $query = <<<EOF
+        SELECT * as Permission
+        FROM Users
+        WHERE Permissions.Name = '$permission';
+EOF
+
+      $results = $this->query($query);
+      $permissions = array();
+      
+      if (!is_bool($results))
+      {
+        while ($row = $results->fetchArray())
+        {
+          $permissions[$row['ID']] = $row;
+        }
+      }
+    }
+    
+    return $permissions;
+  }
+
+  /**
+   * Attempts to insert a user into a group, returns a boolean
+   * representing success.
+   */
+  function addGroupMember($group, $username)
+  {
+    $group = parent::escapeString($group);
+    $username = parent::escapeString($username);
+
+    $query = <<<EOF
+      INSERT INTO GroupMembers(GroupID, UserID)
+      Values( (SELECT ID FROM Groups WHERE Groups.Name = '$group'),
+              (SELECT ID FROM Users WHERE Users.Name = '$username') );
+EOF;
+
+    $results = $this->query($query);
+    
+    return $results;
+  }
+
+  /**
+   * Attempts to remove a user from a group, returns a boolean
+   * representing success.
+   */
+  function removeGroupMember($group, $username)
+  {
+    $group = parent::escapeString($group);
+    $username = parent::escapeString($username);
+
+    $query = <<<EOF
+      DELETE FROM GroupMembers
+      Where( (SELECT ID FROM Users WHERE Users.Name = '$username') = GroupMembers.UserID
+      AND (SELECT ID FROM Groups WHERE Groups.Name = '$group') = GroupMembers.GroupID);
+EOF;
+
+    $results = $this->query($query);
+    
+    return $results;
+  }
+
+  /**
+   * Attempts to add a permission to a user, returns a boolean
+   * representing success.
+   */
+  function addPermissionToUser($permission, $username)
+  {
+    $permission = parent::escapeString($permission);
+    $username = parent::escapeString($username);
+
+    $query = <<<EOF
+      INSERT INTO UserPermissions(PermissionID, UserID)
+      VALUES( (SELECT ID FROM Permissions WHERE Permission.Name = '$permission'),
+              (SELECT ID FROM Users WHERE Users.Name = '$username') );
+EOF;
+
+    $results = $this->query($query);
+    
+    return $results;
+  }
+
+  /**
+   * Attempts to add a permission to a group, returns a boolean
+   * representing success.
+   */
+  function addPermissionToGroup($permission, $group)
+  {
+    $permission = parent::escapeString($permission);
+    $group = parent::escapeString($group);
+
+    $query = <<<EOF
+      INSERT INTO GroupPermissions(PermissionID, GroupID)
+      VALUES( (SELECT ID FROM Permissions WHERE Permission.Name = '$permission'),
+              (SELECT ID FROM Groups WHERE Groups.Name = '$group') );
+EOF;
+
+    $results = $this->query($query);
+    
+    return $results;
+  }
 }
 
