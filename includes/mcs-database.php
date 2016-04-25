@@ -639,5 +639,45 @@ EOF;
     
     return $users;
   }
+
+  /**
+   * Attempts to update a group with a new name, returns either an array
+   * representing the record, or an empty array.
+   */
+  function updateGroupName($group, $newGroup)
+  {
+    $group = parent::escapeString($group);
+    $newGroup = parent::escapeString($newGroup);
+
+    $query = <<<EOF
+      UPDATE Groups
+      SET Groups.Name = '$newGroup'
+      WHERE Groups.Name = '$group';
+EOF;
+
+    $results = $this->query($query);
+
+    if($results == true)
+    {
+      $query = <<<EOF
+        SELECT * as Group
+        FROM Groups
+        WHERE Groups.Name = '$newGroup';
+EOF;
+
+      $results = $this->query($query);
+      $groups = array();
+      
+      if (!is_bool($results))
+      {
+        while ($row = $results->fetchArray())
+        {
+          $groups[$row['ID']] = $row;
+        }
+      }
+    }
+    
+    return $groups;
+  }
 }
 
