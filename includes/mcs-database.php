@@ -538,5 +538,106 @@ EOF;
     
     return $groupPermissions;
   }
+
+  /**
+   * Retrieves all users in the database. Returns an array indexed by
+   * ID.
+   */
+  function fetchAllUsers()
+  {
+    $query = <<<EOF
+      SELECT * as User FROM Users;
+EOF;
+
+    $results = $this->query($query);
+    $users = array();
+
+    if (!is_bool($results))
+    {
+      while ($row = $results->fetchArray())
+      {
+        $users[$row['ID']] = $row;
+      }
+    }
+    
+    return $users;
+  }
+
+  /**
+   * Retrieves all groups in the database. Returns an array indexed by
+   * ID.
+   */
+  function fetchAllGroups()
+  {
+    $query = <<<EOF
+      SELECT * as Group FROM Groups;
+EOF;
+
+    $results = $this->query($query);
+    $groups = array();
+
+    if (!is_bool($results))
+    {
+      while ($row = $results->fetchArray())
+      {
+        $groups[$row['ID']] = $row;
+      }
+    }
+    
+    return $groups;
+  }
+
+  /**
+   * Retrieves all permissions in the database. Returns an array indexed by
+   * ID.
+   */
+  function fetchAllPermissions()
+  {
+    $query = <<<EOF
+      SELECT * as Permission FROM Permissions;
+EOF;
+
+    $results = $this->query($query);
+    $permissions = array();
+
+    if (!is_bool($results))
+    {
+      while ($row = $results->fetchArray())
+      {
+        $permissions[$row['ID']] = $row;
+      }
+    }
+    
+    return $permissions;
+  }
+
+  /**
+   * Retrieves all users in a group. Returns an array indexed by
+   * ID.
+   */
+  function fetchAllUsersInGroup($group)
+  {
+    $query = <<<EOF
+      SELECT * as User FROM Users
+      WHERE (SELECT UserID FROM GroupMembers
+             WHERE (SELECT ID FROM Groups
+                    WHERE Groups.Name = '$group')
+             = GroupMembers.GroupID)
+      = Users.ID;
+EOF;
+
+    $results = $this->query($query);
+    $users = array();
+
+    if (!is_bool($results))
+    {
+      while ($row = $results->fetchArray())
+      {
+        $users[$row['ID']] = $row;
+      }
+    }
+    
+    return $users;
+  }
 }
 
