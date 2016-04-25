@@ -732,5 +732,27 @@ EOF;
     
     return $groups;
   }
+  
+  function declarePermission($permission)
+  {
+	if(empty($permission))
+		return false;
+	  
+	$permission = parent::trim($permission);
+    $permission = parent::escapeString($permission);
+	
+    $query = <<<EOF
+	INSERT OR IGNORE INTO Permissions(Name) 
+	VALUES('$permission');
+
+	INSERT OR IGNORE INTO Files(Name)
+	VALUES('$filePath');
+
+	INSERT OR IGNORE INTO FilePermissions(PermissionID, FileID)
+	VALUES( (SELECT ID FROM Permissions WHERE Permissions.ID = '$permission'), (SELECT ID FROM Files WHERE Files.Name = '$filePath') )
+EOF;
+
+    $results = $this->query($query);
+  }
 }
 
