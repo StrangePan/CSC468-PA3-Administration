@@ -41,7 +41,7 @@ abstract class User
             $instance = $subclass::authenticate($username, $password);
             if ($instance != null)
             {
-                $_SESSION[self::SESSION_FIELD] = serialize($instance);
+                $_SESSION[self::SESSION_FIELD] = $instance->serialize();
                 return true;
             }
             else
@@ -175,5 +175,10 @@ abstract class User
     public static function setSubclass($subclass)
     {
         self::$subclass = $subclass;
+    }
+    
+    public function serialize()
+    {
+      return serialize($this);
     }
 }

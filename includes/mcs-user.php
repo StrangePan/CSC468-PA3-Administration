@@ -11,6 +11,8 @@ class MCSUser extends User
 {
     private $username;
     private $displayName;
+    private $cachedPermissions;
+    private static $dbConnection;
 
     //Constructor that takes necessary user data.
     public function __construct($username, $displayName)
@@ -18,6 +20,7 @@ class MCSUser extends User
         parent::__construct();
         $this->username = $username;
         $this->displayName = $displayName;
+        $this->cachedPermissions = null;
     }
 
     //Returns the display name for the current user. Return is always a string
@@ -34,8 +37,12 @@ class MCSUser extends User
     
     public function hasPermission($permission)
     {
-        // To be implemented
-        return true;
+        if ($this->cachedPermissions == null)
+        {
+          $this->cachedPermissions = self::$dbConnection->selectPermissionsForUserByName($this->getUsername());
+        }
+        
+        return isset($this->cachedPermissions[$permission]);
     }
     
     public function logOut()
@@ -103,5 +110,22 @@ class MCSUser extends User
     public static function declarePermission($permission)
     {
         // To be implemented
+    }
+    
+    public static function setDatabaseConnection($db)
+    {
+        self::$dbConnection = $db;
+    }
+    
+    public function serialize()
+    {
+      $cache = $this->cachedPermissions;
+      $this->cachedPermissions = null;
+      
+      $s = parent::serialize();
+      
+      $this->cachedPermissions = $cache;
+      
+      return $s;
     }
 }

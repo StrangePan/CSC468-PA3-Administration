@@ -2,10 +2,17 @@
 require_once 'includes/config.php';
 require_once 'includes/mcs-user.php';
 require_once 'includes/template.php';
+require_once 'includes/mcs-database.php';
 
 User::setSubclass('MCSUser');
 
-session_start();
+$db = new MCSDatabase();
+MCSUser::setDatabaseConnection($db);
+
+// Start PHP session (only if not already set)
+if (session_id() == '') {
+  session_start();
+}
 
 require_once 'includes/login.php';
 
@@ -16,6 +23,7 @@ $redirections = array(
 function processFilePath($filePath)
 {
   global $CONFIG;
+  global $db;
   
 	//Get extension
 	$extension = explode ('.', $filePath);
