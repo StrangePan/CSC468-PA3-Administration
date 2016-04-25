@@ -34,15 +34,17 @@ if ($task === TASK_UPDATE_DETAILS && $class === CLASS_GROUP) {
 elseif ($task === TASK_REMOVE_PERMISSIONS) {
   $permissions = isset($_POST['permission']) ? $_POST['permission'] : array();
   
-  switch ($class)
-  {
-  case CLASS_GROUP:
-    // TODO remove permissions from group
-    break;
-    
-  case CLASS_USER:
-    // TODO remove permissions from user
-    break;
+  foreach ($permissions as $permissionId) {
+    switch ($class)
+    {
+    case CLASS_GROUP:
+      $db->removePermissionFromGroup($permissionId, $id);
+      break;
+      
+    case CLASS_USER:
+      $db->removePermissionFromUser($permissionId, $id);
+      break;
+    }
   }
 }
 
@@ -79,11 +81,23 @@ elseif ($task === TASK_ADD_PERMISSIONS) {
   switch ($class)
   {
   case CLASS_GROUP:
-    // TODO remove permissions by ID from group/user
+    foreach ($permissions['ids'] as $permissionId) {
+      $db->addPermissionToGroup($permissionId, $id);
+    }
+    foreach ($permissions['names'] as $permissionName) {
+      $permissionId = $db->createPermission($permissionName);
+      $db->addPermissionToGroup($permissionId, $id);
+    }
     break;
     
   case CLASS_USER:
-    // TODO remove permissions by Name from group/user
+    foreach ($permissions['ids'] as $permissionId) {
+      $db->addPermissionToUser($permissionId, $id);
+    }
+    foreach ($permissions['names'] as $permissionName) {
+      $permissionId = $db->createPermission($permissionName);
+      $db->addPermissionToUser($permissionId, $id);
+    }
     break;
   }
 }
@@ -110,14 +124,18 @@ elseif ($task === TASK_ADD_MEMBERS && $class === CLASS_GROUP) {
 elseif ($task === TASK_REMOVE_FROM_GROUPS && $class === CLASS_USER) {
   $groups = isset($_POST['group']) ? $_POST['group'] : array();
   
-  // TODO remove user from selected groups
+  foreach ($groups as $groupId) {
+    $db->removeGroupMember($groupId, $id);
+  }
 }
 
 // add member to group
 elseif ($task === TASK_ADD_TO_GROUPS && $class === CLASS_USER) {
   $groups = isset($_POST['group']) ? $_POST['group'] : array();
   
-  // TODO add user to selected groups
+  foreach ($groups as $groupId) {
+    $db->addGroupMember($groupId, $id);
+  }
 }
 
 

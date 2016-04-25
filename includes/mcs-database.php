@@ -362,7 +362,7 @@ EOF;
     $permission = parent::escapeString($permission);
 
     $query = <<<EOF
-      INSERT INTO Permissions(Name)
+      INSERT OR IGNORE INTO Permissions(Name)
       Values('$permission');
 EOF;
 
@@ -372,23 +372,22 @@ EOF;
     {
       $query = <<<EOF
         SELECT *
-        FROM Users
-        WHERE Permissions.Name = '$permission';
+        FROM Permissions
+        WHERE Name = '$permission';
 EOF;
 
       $results = $this->query($query);
-      $permissions = array();
       
       if (!is_bool($results))
       {
         while ($row = $results->fetchArray())
         {
-          $permissions[$row['ID']] = $row;
+          return $row['ID'];
         }
       }
     }
     
-    return $permissions;
+    return FALSE;
   }
   
   /**
@@ -452,18 +451,17 @@ EOF;
    * Attempts to add a permission to a user, returns a boolean
    * representing success.
    */
-  function addPermissionToUser($permission, $username)
+  function addPermissionToUser($permission, $user)
   {
     $permission = parent::escapeString($permission);
-    $username = parent::escapeString($username);
+    $username = parent::escapeString($user);
 
     $query = <<<EOF
-      INSERT INTO UserPermissions(PermissionID, UserID)
-      VALUES( (SELECT ID FROM Permissions WHERE Permission.Name = '$permission'),
-              (SELECT ID FROM Users WHERE Users.Name = '$username') );
+      INSERT OR IGNORE INTO UserPermissions(PermissionID, UserID)
+      VALUES( $permission, $user );
 EOF;
 
-    $results = $this->query($query);
+    $results = $this->exec($query);
     
     return $results;
   }
@@ -472,18 +470,17 @@ EOF;
    * Attempts to remove a permission from a user, returns a boolean
    * representing success.
    */
-  function removePermissionFromUser($permission, $username)
+  function removePermissionFromUser($permission, $user)
   {
     $permission = parent::escapeString($permission);
-    $username = parent::escapeString($username);
+    $username = parent::escapeString($user);
 
     $query = <<<EOF
-      DELETE FROM Permissions
-      Where( (SELECT ID FROM Users WHERE Users.Name = '$username') = UserPermissions.UserID
-      AND (SELECT ID FROM Permissions WHERE Permissions.Name = '$permission') = Permissions.ID);
+      DELETE FROM UserPermissions
+      Where UserID = $user AND PermissionID = $permission;
 EOF;
 
-    $results = $this->query($query);
+    $results = $this->exec($query);
     
     return $results;
   }
@@ -498,12 +495,11 @@ EOF;
     $group = parent::escapeString($group);
 
     $query = <<<EOF
-      INSERT INTO GroupPermissions(PermissionID, GroupID)
-      VALUES( (SELECT ID FROM Permissions WHERE Permission.Name = '$permission'),
-              (SELECT ID FROM Groups WHERE Groups.Name = '$group') );
+      INSERT OR IGNORE INTO GroupPermissions(PermissionID, GroupID)
+      VALUES( $permission, $group );
 EOF;
 
-    $results = $this->query($query);
+    $results = $this->exec($query);
     
     return $results;
   }
@@ -518,12 +514,11 @@ EOF;
     $group = parent::escapeString($group);
 
     $query = <<<EOF
-      DELETE FROM Permissions
-      Where( (SELECT ID FROM Groups WHERE Groups.Name = '$group') = GroupPermissions.GroupID
-      AND (SELECT ID FROM Permissions WHERE Permissions.Name = '$permission') = Permissions.ID);
+      DELETE FROM GroupPermissions
+      Where GroupID = $group AND PermissionID = $permission;
 EOF;
 
-    $results = $this->query($query);
+    $results = $this->exec($query);
     
     return $results;
   }
