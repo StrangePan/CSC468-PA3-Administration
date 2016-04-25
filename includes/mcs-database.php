@@ -121,7 +121,7 @@ EOF;
     $permission = parent::escapeString($permission);
     
     $query = <<<EOF
-      SELECT Users.Name as User
+      SELECT Users.ID, Users.Name
       FROM Users
       INNER JOIN UserPermissions
       ON UserPermissions.UserID = Users.ID
@@ -150,7 +150,7 @@ EOF;
       while ($row = $results->fetchArray())
       {
         $users[] = $row[0];
-        $users[$row[0]] = TRUE;
+        $users[$row[0]] = row[1];
       }
     }
     
@@ -162,7 +162,7 @@ EOF;
     $username = parent::escapeString($username);
     
     $query = <<<EOF
-      SELECT Groups.Name
+      SELECT Groups.ID, Groups.Name
 	  FROM Groups
 	  INNER JOIN GroupMembers
 	  ON Groups.ID = GroupMembers.GroupID
@@ -179,7 +179,7 @@ EOF;
       while ($row = $results->fetchArray())
       {
         $groups[] = $row[0];
-        $groups[$row[0]] = TRUE;
+        $groups[$row[0]] = row[1];
       }
     }
     
@@ -236,7 +236,7 @@ EOF;
         SELECT * as User
         FROM Users
         WHERE Users.Name = '$username';
-EOF
+EOF;
 
       $results = $this->query($query);
       $users = array();
@@ -274,7 +274,7 @@ EOF;
         SELECT * as Group
         FROM Groups
         WHERE Groups.Name = '$group';
-EOF
+EOF;
 
       $results = $this->query($query);
       $groups = array();
@@ -312,7 +312,7 @@ EOF;
         SELECT * as Permission
         FROM Users
         WHERE Permissions.Name = '$permission';
-EOF
+EOF;
 
       $results = $this->query($query);
       $permissions = array();
@@ -407,6 +407,42 @@ EOF;
     $results = $this->query($query);
     
     return $results;
+  }
+
+  function selectInheritedPermissions($username)
+  {
+    $username = parent::escapeString($username);
+    
+    $query = <<<EOF
+      SELECT Groups.Name, Permissions.Name
+      FROM Groups
+      INNER JOIN GroupPermissions
+	  ON Groups.ID = GroupPermissions.GroupID
+	  INNER JOIN Permissions
+	  ON GroupPermissions.PermissionID = Permissions.ID
+	  INNER JOIN GroupMembers
+	  ON GroupMembers.GroupID = Groups.ID
+	  INNER JOIN Users
+	  ON GroupMembers.UserID = Users.ID
+	  WHERE Users.Name = '$username';
+EOF;
+    
+    $results = $this->query($query);
+    $groupPermissions = array();
+    
+    if (!is_bool($results))
+    {	  
+      while ($row = $results->fetchArray())
+      {
+		if(!array_key_exists($row[0], $groupPermissions))
+		{
+			$groupPermissions[] = $row[0];
+		}
+        $groupPermissions[$row[0]] = row[1];
+      }
+    }
+    
+    return $groupPermissions;
   }
 }
 
