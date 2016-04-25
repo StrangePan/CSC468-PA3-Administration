@@ -4,8 +4,8 @@ if (!defined('ADMIN_PAGE_INCLUDED')) die('Access denied');
 define ('TASK_UPDATE_DETAILS', 'updateDetails');
 define ('TASK_ADD_PERMISSIONS', 'addPermissions');
 define ('TASK_REMOVE_PERMISSIONS', 'removePermissions');
-define ('TASK_ADD_GROUP_MEMBERS', 'addMembers');
-define ('TASK_REMOVE_GROUP_MEMBERS', 'removeMembers');
+define ('TASK_ADD_MEMBERS', 'addMembers');
+define ('TASK_REMOVE_MEMBERS', 'removeMembers');
 define ('TASK_ADD_TO_GROUPS', 'addGroups');
 define ('TASK_REMOVE_FROM_GROUPS', 'removeGroups');
 define ('CLASS_GROUP', 'group');
@@ -22,11 +22,9 @@ $allUsers = array();
 $allPermissions = array();
 
 // TODO fetch all groups and users from database
-/*
-$allGroups = $db->selectAllGroups();
-$allUsers = $db->selectAllUsers();
-$allPermissions = $db->selectAllPermissions();
-*/
+$allGroups = $db->fetchAllGroups();
+$allUsers = $db->fetchAllUsers();
+$allPermissions = $db->fetchAllPermissions();
 
 
 // Determine the type of entity to display, if any
@@ -49,20 +47,23 @@ if (isset($_GET['g']) && isset($allGroups[$_GET['g']])) {
 // Fetch data from database that is relevant to the selected entity
 switch ($type) {
 case TYPE_GROUP:
-  $name = (isset($allGroups[$id]) ? $allGroups[$id] : '');
-  $permissions = array(); // TODO $db->selectPermissionsForGroup($id);
-  $members = array(); // TODO $db->selectUsersForGroup($id);
+  $name = (isset($allGroups[$id]) ? $allGroups[$id]['Name'] : '');
+  $permissions = $db->fetchAllPermissionsInGroup($id);
+  var_dump($permissions);
+  $members = $db->fetchAllUsersInGroup($id);
   break;
   
 case TYPE_USER:
-  $name = (isset($allUsers[$id]) ? $allUsers[$id] : '');
+  $name = (isset($allUsers[$id]) ? $allUsers[$id]['Name'] : '');
   $displayName = '';
-  $permissions = array(); // TODO $db->selectPermissionsForUser($id);
-  $groups = array(); // TODO $db->selectGroupsForUser($id);
+  $permissions = $db->selectUserPermissionsById($id);
+  $groups = $db->selectGroupsForUser($id);
+/*
   $inheritedPermissions = array();
-  foreach ($groups as $group) {
-    $inheritedPermissions[$group] = array(); // TODO $db->selectPermissionsForGroup($group);
+  foreach ($groups as $groupId=>$group) {
+    $inheritedPermissions[$group] = array();$db->fetchAllPermissionsInGroup($groupId);
   }
+*/
   break;
 }
 
@@ -84,8 +85,8 @@ case TYPE_USER:
             <!-- Entire list of permission groups in database -->
             <li>Groups
               <ul>
-<?php foreach ($allGroups as $groupId=>$groupName) : ?>
-                <li><a href="?g=<?php echo $groupId ?>"><?php echo $groupName ?></a></li>
+<?php foreach ($allGroups as $groupId=>$groupArray) : ?>
+                <li><a href="?g=<?php echo $groupId ?>"><?php echo $groupArray['Name'] ?></a></li>
 <?php endforeach; ?>
               </ul>
             </li>
@@ -93,8 +94,8 @@ case TYPE_USER:
             <!-- Entire list of users in database. (May be very long!) -->
             <li>Users
               <ul>
-<?php foreach ($allUsers as $userId=>$userName) : ?>
-                <li><a href="?u=<?php echo $userId ?>"><?php echo $userName ?></a></li>
+<?php foreach ($allUsers as $userId=>$userArray) : ?>
+                <li><a href="?u=<?php echo $userId ?>"><?php echo $userArray['Name'] ?></a></li>
 <?php endforeach; ?>
               </ul>
             </li>
@@ -121,12 +122,12 @@ case TYPE_USER:
           <form method="post" action="">
             
             <!-- Database ID for the group -->
-            <label for="group-id">ID</label>
-            <input type="text" name="group-id" value="<?php echo $id ?>" disabled />
+            <label for="id">ID</label>
+            <input type="text" name="id" value="<?php echo $id ?>" disabled />
             
             <!-- Group name -->
-            <label for="group-name">Name</label>
-            <input type="text" name="group-name" value="<?php echo $name ?>" />
+            <label for="name">Name</label>
+            <input type="text" name="name" value="<?php echo $name ?>" />
             
             <!-- Submission button -->
             <input type="hidden" name="task" value="<?php echo TASK_UPDATE_DETAILS ?>" />
@@ -146,10 +147,10 @@ case TYPE_USER:
 <?php if (count($members) > 0) : ?>
               
               <!-- Existing members that can be removed -->
-<?php foreach ($members as $memberId=>$memberName) : ?>
+<?php foreach ($members as $memberId=>$memberArray) : ?>
               <li>
                 <input type="checkbox" name="member[]" value="<?php echo $memberId ?>" />
-                <a class="checkbox-label" href="?u=<?php echo $memberId ?>"><?php echo $memberName ?></a>
+                <a class="checkbox-label" href="?u=<?php echo $memberId ?>"><?php echo $memberArray['Name'] ?></a>
               </li>
 <?php endforeach; ?>
 <?php else : ?>
@@ -173,8 +174,8 @@ case TYPE_USER:
               <li>
                 <select name="member[]">
                   <option value="" selected></option>
-<?php foreach ($allUsers as $memberId=>$memberName) : ?>
-                  <option value="<?php echo $memberId ?>"><?php echo $memberName ?></option>
+<?php foreach ($allUsers as $memberId=>$memberArray) : ?>
+                  <option value="<?php echo $memberId ?>"><?php echo $memberArray['Name'] ?></option>
 <?php endforeach; ?>
                 </select>
               </li>
@@ -197,11 +198,11 @@ case TYPE_USER:
 <?php if (count($permissions) > 0) : ?>
               
               <!-- Existing permissions that can be removed -->
-<?php foreach ($permissions as $permissionId=>$permissionName) : ?>
+<?php foreach ($permissions as $permissionId=>$permissionArray) : ?>
               <li>
                 <label>
                   <input type="checkbox" name="permission[]" value="<?php echo $permissionId ?>" />
-                  <span class="checkbox-label"><?php echo $permissionName ?></span>
+                  <span class="checkbox-label"><?php echo $permissionArray['Name'] ?></span>
                 </label>
               </li>
 <?php endforeach; ?>
@@ -226,8 +227,8 @@ case TYPE_USER:
               <li>
                 <select name="permission-id[]">
                   <option value="" selected></option>
-<?php foreach ($allPermissions as $permissionId=>$permissionName) : ?>
-                  <option value="<?php echo $permissionId ?>"><?php echo $permissionName ?></option>
+<?php foreach ($allPermissions as $permissionId=>$permissionArray) : ?>
+                  <option value="<?php echo $permissionId ?>"><?php echo $permissionArray['Name'] ?></option>
 <?php endforeach; ?>
                 </select>
                 or
@@ -251,16 +252,16 @@ case TYPE_USER:
           <form method="post" action="">
             
             <!-- Database ID for the user -->
-            <label for="user-id">ID</label>
-            <input type="text" name="user-id" value="<?php echo $id ?>" disabled />
+            <label for="id">ID</label>
+            <input type="text" name="id" value="<?php echo $id ?>" disabled />
             
             <!-- Username -->
-            <label for="user-username">Username</label>
-            <input type="text" name="user-username" value="<?php echo $name ?>" disabled />
+            <label for="username">Username</label>
+            <input type="text" name="username" value="<?php echo $name ?>" disabled />
             
             <!-- User display name -->
-            <label for="user-name">Display Name</label>
-            <input type="text" name="user-name" value="<?php echo $displayName ?>" disabled />
+            <label for="name">Display Name</label>
+            <input type="text" name="name" value="<?php echo $displayName ?>" disabled />
             
             <!-- Submission button -->
             <input type="hidden" name="task" value="<?php echo TASK_UPDATE_DETAILS ?>" />
@@ -280,11 +281,11 @@ case TYPE_USER:
 <?php if (count($permissions) > 0) : ?>
               
               <!-- Existing permissions that can be removed -->
-<?php foreach ($permissions as $permissionId=>$permissionName) : ?>
+<?php foreach ($permissions as $permissionId=>$permissionArray) : ?>
               <li>
                 <label>
                   <input type="checkbox" name="permission[]" value="<?php echo $permissionId ?>" />
-                  <span class="checkbox-label"><?php echo $permissionName ?></span>
+                  <span class="checkbox-label"><?php echo $permissionArray['Name'] ?></span>
                 </label>
               </li>
 <?php endforeach; ?>
@@ -309,8 +310,8 @@ case TYPE_USER:
               <li>
                 <select name="permission-id[]">
                   <option value="" selected></option>
-<?php foreach ($allPermissions as $permissionId=>$permissionName) : ?>
-                  <option value="<?php echo $permissionId ?>"><?php echo $permissionName ?></option>
+<?php foreach ($allPermissions as $permissionId=>$permissionArray) : ?>
+                  <option value="<?php echo $permissionId ?>"><?php echo $permissionArray['Name'] ?></option>
 <?php endforeach; ?>
                 </select>
                 or
@@ -335,10 +336,10 @@ case TYPE_USER:
 <?php if (count($groups) > 0) : ?>
               
               <!-- Existing members that can be removed -->
-<?php foreach ($groups as $groupId=>$groupName) : ?>
+<?php foreach ($groups as $groupId=>$groupArray) : ?>
               <li>
                 <input type="checkbox" name="group[]" value="<?php echo $groupId ?>" />
-                <a class="checkbox-label" href="?g=<?php echo $groupId ?>"><?php echo $groupName ?></a>
+                <a class="checkbox-label" href="?g=<?php echo $groupId ?>"><?php echo $groupArray['Name'] ?></a>
               </li>
 <?php endforeach; ?>
 <?php else : ?>
@@ -362,8 +363,8 @@ case TYPE_USER:
               <li>
                 <select name="group[]">
                   <option value="" selected></option>
-<?php foreach ($allGroups as $groupId=>$groupName) : ?>
-                  <option value="<?php echo $groupId ?>"><?php echo $groupName ?></option>
+<?php foreach ($allGroups as $groupId=>$groupArray) : ?>
+                  <option value="<?php echo $groupId ?>"><?php echo $groupArray['Name'] ?></option>
 <?php endforeach; ?>
                 </select>
               </li>

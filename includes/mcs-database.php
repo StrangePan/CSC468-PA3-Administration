@@ -157,18 +157,18 @@ EOF;
     return $users;
   }
   
-  function selectGroupsForUser($username)
+  function selectGroupsForUser($userid)
   {
-    $username = parent::escapeString($username);
+    $userid = parent::escapeString($userid);
     
     $query = <<<EOF
-      SELECT Groups.ID, Groups.Name
+      SELECT Groups.*
 	  FROM Groups
 	  INNER JOIN GroupMembers
 	  ON Groups.ID = GroupMembers.GroupID
 	  INNER JOIN Users
 	  ON GroupMembers.UserID = Users.ID
-	  WHERE Users.Name = '$username';
+	  WHERE Users.ID = $userid;
 EOF;
     
     $results = $this->query($query);
@@ -178,8 +178,7 @@ EOF;
     {
       while ($row = $results->fetchArray())
       {
-        $groups[] = $row[0];
-        $groups[$row[0]] = $row[1];
+        $groups[$row['ID']] = $row;
       }
     }
     
@@ -191,7 +190,7 @@ EOF;
     $username = parent::escapeString($username);
     
     $query = <<<EOF
-      SELECT Permissions.Name
+      SELECT Permissions.*
 	  FROM Permissions
 	  INNER JOIN UserPermissions
 	  ON Permissions.ID = UserPermissions.PermissionID
@@ -207,13 +206,40 @@ EOF;
     {
       while ($row = $results->fetchArray())
       {
-        $userPermissions[] = $row[0];
-        $userPermissions[$row[0]] = TRUE;
+        $userPermissions[$row['ID']] = $row;
       }
     }
     
     return $userPermissions;
-  }   
+  }
+
+  function selectUserPermissionsById($username)
+  {
+    $username = parent::escapeString($username);
+    
+    $query = <<<EOF
+      SELECT Permissions.*
+	  FROM Permissions
+	  INNER JOIN UserPermissions
+	  ON Permissions.ID = UserPermissions.PermissionID
+	  INNER JOIN Users
+	  ON UserPermissions.UserID = Users.ID
+	  WHERE Users.ID = $username;
+EOF;
+
+    $results = $this->query($query);
+    $userPermissions = array();
+    
+    if (!is_bool($results))
+    {
+      while ($row = $results->fetchArray())
+      {
+        $userPermissions[$row['ID']] = $row;
+      }
+    }
+    
+    return $userPermissions;
+  }
 
   /**
    * Attempts to insert a user with a given name, returns either an array
@@ -387,15 +413,14 @@ EOF;
    * Attempts to insert a user into a group, returns a boolean
    * representing success.
    */
-  function addGroupMember($group, $username)
+  function addGroupMember($group, $user)
   {
     $group = parent::escapeString($group);
-    $username = parent::escapeString($username);
+    $user = parent::escapeString($user);
 
     $query = <<<EOF
       INSERT INTO GroupMembers(GroupID, UserID)
-      Values( (SELECT ID FROM Groups WHERE Groups.Name = '$group'),
-              (SELECT ID FROM Users WHERE Users.Name = '$username') );
+      Values($group, $user);
 EOF;
 
     $results = $this->query($query);
@@ -407,18 +432,18 @@ EOF;
    * Attempts to remove a user from a group, returns a boolean
    * representing success.
    */
-  function removeGroupMember($group, $username)
+  function removeGroupMember($group, $user)
   {
     $group = parent::escapeString($group);
-    $username = parent::escapeString($username);
+    $username = parent::escapeString($user);
 
     $query = <<<EOF
       DELETE FROM GroupMembers
-      Where( (SELECT ID FROM Users WHERE Users.Name = '$username') = GroupMembers.UserID
-      AND (SELECT ID FROM Groups WHERE Groups.Name = '$group') = GroupMembers.GroupID);
+      Where UserID = $user
+      AND GroupID = $group;
 EOF;
 
-    $results = $this->query($query);
+    $results = $this->exec($query);
     
     return $results;
   }
@@ -617,13 +642,17 @@ EOF;
    */
   function fetchAllUsersInGroup($group)
   {
+    $group = parent::escapeString($group);
+    
     $query = <<<EOF
-      SELECT Users.Name
+      SELECT Users.*
 	  FROM Users
 	  INNER JOIN GroupMembers
 	  ON Users.ID = GroupMembers.UserID
 	  INNER JOIN Groups
-	  ON Groups.Name = '$group';
+	  ON Groups.ID = GroupMembers.GroupID
+	  WHERE
+	  Groups.ID = $group;
 EOF;
 
     $results = $this->query($query);
@@ -639,23 +668,52 @@ EOF;
     
     return $users;
   }
+  
+  function fetchAllPermissionsInGroup($group)
+  {
+    $group = parent::escapeString($group);
+    
+    $query = <<<EOF
+      SELECT Permissions.*
+      FROM Permissions
+      INNER JOIN GroupPermissions
+      ON GroupPermissions.PermissionID = Permissions.ID
+      INNER JOIN Groups
+      ON Groups.ID = GroupPermissions.GroupID
+      WHERE Groups.ID = $group;
+EOF;
+
+    $results = $this->query($query);
+    $users = array();
+
+    if (!is_bool($results))
+    {
+      while ($row = $results->fetchArray())
+      {
+        $users[$row['ID']] = $row;
+      }
+    }
+    
+    return $users;
+  }
+    
 
   /**
    * Attempts to update a group with a new name, returns either an array
    * representing the record, or an empty array.
    */
-  function updateGroupName($group, $newGroup)
+  function updateGroupName($groupid, $newGroup)
   {
-    $group = parent::escapeString($group);
+    $groupid = parent::escapeString($groupid);
     $newGroup = parent::escapeString($newGroup);
 
     $query = <<<EOF
       UPDATE Groups
-      SET Groups.Name = '$newGroup'
-      WHERE Groups.Name = '$group';
+      SET Name = '$newGroup'
+      WHERE Groups.ID = $groupid;
 EOF;
 
-    $results = $this->query($query);
+    $this->exec($query);
 
     if($results == true)
     {

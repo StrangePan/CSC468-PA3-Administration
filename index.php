@@ -23,6 +23,7 @@ $redirections = array(
 function processFilePath($filePath)
 {
   global $CONFIG;
+  global $db;
   
 	//Get extension
 	$extension = explode ('.', $filePath);
