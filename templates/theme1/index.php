@@ -18,13 +18,6 @@
     <!-- Main page header -->
     <div class="header-wrapper">
       <header>
-
-        <!-- School logo -->
-        <img src="<?php echo templateUrl(); ?>/images/sdsmt-logo.png" class="logo" alt="South Dakota School of Mines and Technology" />
-        
-        <!-- Website title -->
-        <h1>Math and Computer Science Department</h1>
-        <h2>South Dakota School of Mines and Technology</h2>
         
         <!-- User sign in form -->
 <?php if (!User::isAuthenticated()) : ?>
@@ -50,6 +43,13 @@
           </button>
         </form>
 <?php endif; ?>
+
+        <!-- School logo -->
+        <img src="<?php echo templateUrl(); ?>/images/sdsmt-logo.png" class="logo" alt="South Dakota School of Mines and Technology" />
+        
+        <!-- Website title -->
+        <h1>Math and Computer Science Department</h1>
+        <h2>South Dakota School of Mines and Technology</h2>
       </header>
     </div>
     

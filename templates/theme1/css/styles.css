@@ -47,6 +47,7 @@ footer {
 
 header h1 {
   font-size: 2rem;
+  margin-top: 0;
 }
 header h2 {
   font-size: 1.5rem;
@@ -72,15 +73,14 @@ header form.logout {
   margin-left: 2em;
 }
 
-header form.login > *,
-header form.logout > * {
-  float: left;
-  margin-left: 0.5em;
-}
 header form.login > *:first-child {
   margin-left: 0;
 }
 
+header form label {
+  display: block;
+  text-align: right;
+}
 header form.login label,
 header form.logout span {
   font-size: 1.25em;
@@ -88,16 +88,16 @@ header form.logout span {
 
 header form.login label input[type="text"],
 header form.login label input[type="password"] {
-  display: block;
   width: 10em;
+  margin-left: 0.25em;
 }
 
 header form.login button,
 header form.logout button {
   font-size: 1em;
-}
-header form.login button {
-  margin-top: calc(1.25em - 1px);
+  display: block;
+  margin-left: auto;
+  margin-right: 0;
 }
 
 
