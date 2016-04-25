@@ -39,7 +39,7 @@ class MCSUser extends User
     {
         if ($this->cachedPermissions == null)
         {
-          $this->cachedPermissions = self::$dbConnection->selectPermissionsForUser($this->getUsername());
+          $this->cachedPermissions = self::$dbConnection->selectPermissionsForUserByName($this->getUsername());
         }
         
         return isset($this->cachedPermissions[$permission]);

@@ -150,7 +150,7 @@ EOF;
       while ($row = $results->fetchArray())
       {
         $users[] = $row[0];
-        $users[$row[0]] = row[1];
+        $users[$row[0]] = $row[1];
       }
     }
     
@@ -179,7 +179,7 @@ EOF;
       while ($row = $results->fetchArray())
       {
         $groups[] = $row[0];
-        $groups[$row[0]] = row[1];
+        $groups[$row[0]] = $row[1];
       }
     }
     
@@ -315,7 +315,7 @@ EOF;
    */
   function removeGroup($group)
   {
-    $group] = parent::escapeString($group);
+    $group = parent::escapeString($group);
 
     $query = <<<EOF
       DELETE FROM Groups
@@ -532,7 +532,7 @@ EOF;
 		{
 			$groupPermissions[] = $row[0];
 		}
-        $groupPermissions[$row[0]] = row[1];
+        $groupPermissions[$row[0]] = $row[1];
       }
     }
     
